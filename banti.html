@@ -1,4 +1,4 @@
-<!-- 파일명: banti.html | @version 1.1.1 -->
+<!-- 파일명: banti.html | @version 1.2.0 -->
 <!doctype html>
 <html lang="ko">
 <head>
@@ -9,7 +9,8 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 <!--
   혜원 체육의 날 — 반티 사진 올리기 (학생용, GitHub Pages)
-  @version 1.1.1
+  @version 1.2.0
+  [1.2.0] 코드로 들어가면 먼저 큰 버튼 두 개(반티 사진 올리기 / 종목별 선수 등록)로 고른다 — 각각 열림·마감 상태를 함께 보여 준다. 안에서는 «‹ 처음 화면»으로 돌아온다.
   [1.1.1] 반 버튼 «2반»이 두 줄로 꺾이던 것 — 늘 한 줄, 좁은 화면에서는 글자를 줄인다. 손가락으로 확대 가능(최대 5배).
   [1.1.0] 코드로 들어간 뒤 «반티 사진»과 «선수 등록»(종목별로 나갈 친구 고르기)을 골라서. 반 고르기는 반티 시간과 상관없이 늘 된다.
   [1.0.0] 반 고르기 → 초대 코드(OTP, 그 반 코드 자리수만큼 칸) → 사진 올리기.
@@ -49,8 +50,9 @@ button,input{font-family:inherit}
 /* 반 표시 */
 .who{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:22px}
 .who .k{width:46px;height:46px;border-radius:12px;background:var(--blue-t);color:var(--blue-d);display:grid;place-items:center;font-weight:900;font-size:16px;flex:none}
-.who p{margin:0;font-size:12.5px;color:var(--muted)}.who b{display:block;font-size:15px;color:var(--ink)}
-.who button{margin-left:auto;border:0;background:none;color:var(--blue);font-weight:700;font-size:13px;cursor:pointer;padding:8px 4px}
+.who p{margin:0;font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who>div:nth-child(2){min-width:0;flex:1}.who b{display:block;font-size:15px;color:var(--ink)}
+.who button{white-space:nowrap;flex:none;margin-left:auto;border:0;background:none;color:var(--blue);font-weight:700;font-size:13px;cursor:pointer;padding:8px 4px}
 /* OTP */
 .otpT{text-align:center;font-size:18px;font-weight:800;margin:0 0 4px}
 .otpS{text-align:center;font-size:13px;color:var(--muted);margin:0 0 18px}
@@ -92,6 +94,19 @@ label.big input{display:none}
 .bar.show{display:block}
 .bar i{display:block;height:100%;width:0;background:var(--blue);transition:width .3s}
 /* 반티 / 선수 등록 고르기 */
+.mback{display:inline-flex;align-items:center;gap:4px;height:38px;padding:0 14px 0 10px;margin:-10px 0 12px;border:1.5px solid var(--line2);border-radius:999px;background:#fff;font-weight:800;font-size:13.5px;color:var(--ink2);cursor:pointer;white-space:nowrap}
+.menu{display:flex;flex-direction:column;gap:12px}
+.mcard{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:#fff;border:1.5px solid var(--line2);border-radius:18px;padding:18px 16px;cursor:pointer;color:var(--ink)}
+.mcard:active{transform:scale(.99)}
+.mcard .ic{width:54px;height:54px;border-radius:15px;background:var(--blue-t);display:grid;place-items:center;flex:none}
+.mcard .ic svg{width:30px;height:30px;fill:none;stroke:var(--blue);stroke-width:1.8}
+.mcard .tx{flex:1;min-width:0}
+.mcard b{display:block;font-size:18px;font-weight:900;letter-spacing:-.02em;white-space:nowrap}
+.mcard p{margin:3px 0 0;font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mcard .chip{margin-top:7px;display:inline-block}
+.mcard .go{font-size:22px;color:var(--muted2);flex:none}
+.mcard.closed{background:#fafbfa}
+.mcard.closed .ic{background:#eceeec}.mcard.closed .ic svg{stroke:var(--muted2)}
 .mseg{display:flex;background:#e9ede9;border-radius:12px;padding:3px;margin:-8px 0 14px}
 .mseg button{flex:1;height:40px;border:0;border-radius:10px;background:transparent;font-weight:800;font-size:14px;color:var(--muted);cursor:pointer}
 .mseg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
@@ -122,7 +137,7 @@ label.big input{display:none}
 <div class="app">
   <div class="top"><small id="yr">혜원 체육의 날</small><h1 id="htitle">반티·선수 등록</h1></div>
   <div class="pad" id="main"><div class="loading">불러오는 중…</div></div>
-  <footer class="vf"><span id="ft">반티·선수 등록</span> · v1.1.1 · 배포 <span id="dep">2026-11-13 23:22</span> (KST)<br>ⓒKIMJINHO</footer>
+  <footer class="vf"><span id="ft">반티·선수 등록</span> · v1.2.0 · 배포 <span id="dep">2026-11-13 23:25</span> (KST)<br>ⓒKIMJINHO</footer>
 </div>
 <div class="ov" id="ov"><div class="dlg" role="dialog" aria-modal="true"><p id="dlgMsg"></p><div class="acts"><button class="no" id="dlgNo">취소</button><button class="ok" id="dlgOk">확인</button></div></div></div>
 <div class="toast" id="toast"></div>
@@ -154,7 +169,7 @@ function whenText(g){if(g.state==='open')return g.to?fmt(g.to)+' 까지':'지금
 const CHIP={open:['open','반티 올리기 열림'],soon:['soon','반티 곧 열려요'],end:['end','반티 마감']};
 
 let B=null;                                // bantiBoot
-const S={key:'',code:'',d:null,fresh:false,mode:'banti',ev:'',pick:null,pfresh:false};   // 고른 반·통과한 코드·사진 정보
+const S={key:'',code:'',d:null,fresh:false,mode:'',ev:'',pick:null,pfresh:false};   // 고른 반·통과한 코드·사진 정보
 const saved=ss.get('sdb');if(saved){S.key=saved.key||'';S.code=saved.code||'';}
 
 /* ① 반 고르기 */
@@ -167,7 +182,9 @@ function vPick(){
   $('#main').querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{S.key=b.dataset.k;vPick();});
   $('#go').onclick=()=>{S.code='';vCode();};
 }
-function who(btn){const st=B.grades[S.key[0]]||{};return `<div class="who"><div class="k">${S.key}</div><div><b>${S.key[0]}학년 ${S.key[2]}반</b><p>${esc(whenText(st))}</p></div><button id="back">${btn}</button></div>`;}
+function who(btn){const st=B.grades[S.key[0]]||{};
+  const sub=!S.d?whenText(st):S.mode==='banti'?'반티: '+whenText(st):S.mode==='players'?(S.d.repOpen?'선수 등록 열림':'선수 등록 마감'):'할 일을 골라 주세요';
+  return `<div class="who"><div class="k">${S.key}</div><div><b>${S.key[0]}학년 ${S.key[2]}반</b><p>${esc(sub)}</p></div><button id="back">${btn}</button></div>`;}
 
 /* ② 초대 코드 — 그 반 코드 자리수만큼 칸. 진짜 입력칸 하나를 칸들 위에 투명하게 덮는다(붙여넣기·자동완성도 된다) */
 function vCode(msg){
@@ -183,7 +200,7 @@ function vCode(msg){
     if(inp.value.length===n&&!busy){busy=true;$('#msg').textContent='확인하는 중…';
       try{const r=await post({a:'bantiLogin',key:S.key,code:inp.value});
         if(!r.ok){busy=false;box.classList.add('bad');$('#msg').className='msg err';$('#msg').textContent=r.msg;setTimeout(()=>{inp.value='';paint();inp.focus();},450);return;}
-        S.code=inp.value;S.d=r;S.fresh=false;S.pick=null;S.pfresh=false;ss.set('sdb',{key:S.key,code:S.code});inp.blur();vMain();}
+        S.code=inp.value;S.d=r;S.fresh=false;S.pick=null;S.mode='';S.pfresh=false;ss.set('sdb',{key:S.key,code:S.code});inp.blur();vMain();}
       catch(e){busy=false;$('#msg').className='msg err';$('#msg').textContent='연결이 안 돼요. 다시 넣어 주세요.';inp.value='';paint();}}};
   inp.onfocus=()=>{box.classList.add('focus');paint();};inp.onblur=()=>box.classList.remove('focus');
   paint();setTimeout(()=>inp.focus(),60);
@@ -221,14 +238,24 @@ async function up(file){if(!file)return;
   catch(e){clearInterval(t);bar.classList.remove('show');await uiAlert('올리지 못했어요. 다시 해 주세요.');vUp();}}
 
 /* 반티 / 선수 등록 */
-function mseg(){const d=S.d,n=d.events.filter(e=>(d.players[e.key]||[]).length>=e.quota).length;
-  return `<div class="mseg"><button data-m="banti" class="${S.mode==='banti'?'on':''}">반티 사진${d.banti.fid?'<em>✓</em>':''}</button><button data-m="players" class="${S.mode==='players'?'on':''}">선수 등록<em>${n}/${d.events.length}</em></button></div>`;}
+function mseg(){return `<button class="mback" data-m="">‹ 처음 화면</button>`;}
+/* 들어오면 먼저 할 일 고르기 — 나중에 마감되면 칩이 «마감»으로 바뀐다 */
+function vMenu(){
+  const d=S.d,st=B.grades[S.key[0]]||{state:d.state},bo=d.state==='open',c=CHIP[d.state]||CHIP.end;
+  const n=d.events.filter(e=>(d.players[e.key]||[]).length>=e.quota).length;
+  $('#main').innerHTML=who('나가기')+`<div class="menu">
+    <button class="mcard ${bo?'':'closed'}" data-m="banti"><span class="ic"><svg viewBox="0 0 24 24"><path d="M8 3l-5 3 2 4 2-1v12h10V9l2 1 2-4-5-3a4 4 0 01-8 0z"/></svg></span>
+      <span class="tx"><b>반티 사진 올리기</b><p>${d.banti.fid?'✓ 올렸어요 · '+esc(d.banti.time):'아직 안 올렸어요'}</p><span class="chip ${c[0]}">${c[1]}</span></span><span class="go">›</span></button>
+    <button class="mcard ${d.repOpen?'':'closed'}" data-m="players"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0113 0"/><path d="M16 4a3.5 3.5 0 010 7M21.5 20a6.5 6.5 0 00-4-6"/></svg></span>
+      <span class="tx"><b>종목별 선수 등록</b><p>${n}/${d.events.length} 종목 다 골랐어요${d.savedAt?' · '+esc(d.savedAt):''}</p><span class="chip ${d.repOpen?'open':'end'}">${d.repOpen?'선수 등록 열림':'선수 등록 마감'}</span></span><span class="go">›</span></button>
+  </div><p class="note">마감된 것도 들어가서 볼 수 있어요</p>`;
+  bindMain();}
 function bindMain(){
-  $('#back').onclick=()=>{S.d=null;S.code='';ss.del('sdb');B&&boot(false);};
-  $('#main').querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{S.mode=b.dataset.m;S.pick=null;vMain();});}
+  $('#back').onclick=()=>{S.d=null;S.code='';S.mode='';ss.del('sdb');$('#htitle').textContent='반티·선수 등록';B&&boot(false);};
+  $('#main').querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{S.mode=b.dataset.m;S.pick=null;S.fresh=false;S.pfresh=false;vMain();scrollTo(0,0);});}
 function vMain(){
-  $('#htitle').textContent=S.mode==='players'?'선수 등록':'반티 사진 올리기';
-  if(S.mode==='players')vPlayers();else vUp();}
+  $('#htitle').textContent=S.mode==='players'?'선수 등록':S.mode==='banti'?'반티 사진 올리기':'반티·선수 등록';
+  if(S.mode==='players')vPlayers();else if(S.mode==='banti')vUp();else vMenu();}
 const EVN=k=>(S.d.events.find(e=>e.key===k)||{name:k}).name;
 function vPlayers(){
   const d=S.d;if(!S.ev||!d.events.some(e=>e.key===S.ev))S.ev=d.events[0].key;
