@@ -1,15 +1,16 @@
-<!-- 파일명: banti.html | @version 1.1.0 -->
+<!-- 파일명: banti.html | @version 1.1.1 -->
 <!doctype html>
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes,viewport-fit=cover">
 <meta name="theme-color" content="#1d4ed8">
 <title>반티·선수 등록</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 <!--
   혜원 체육의 날 — 반티 사진 올리기 (학생용, GitHub Pages)
-  @version 1.1.0
+  @version 1.1.1
+  [1.1.1] 반 버튼 «2반»이 두 줄로 꺾이던 것 — 늘 한 줄, 좁은 화면에서는 글자를 줄인다. 손가락으로 확대 가능(최대 5배).
   [1.1.0] 코드로 들어간 뒤 «반티 사진»과 «선수 등록»(종목별로 나갈 친구 고르기)을 골라서. 반 고르기는 반티 시간과 상관없이 늘 된다.
   [1.0.0] 반 고르기 → 초대 코드(OTP, 그 반 코드 자리수만큼 칸) → 사진 올리기.
           학년별 여는·닫는 시각은 관리자 «설정 › 반티 올리기 시간». 사진은 학교 계정 «혜원핏 사진 창고»에 저장.
@@ -36,9 +37,10 @@ button,input{font-family:inherit}
 .chip.open{background:var(--ok-t);color:var(--ok)}.chip.soon{background:var(--warn-t);color:var(--warn)}.chip.end{background:#eceeec;color:var(--muted2)}
 .when{font-size:12.5px;color:var(--muted2);margin:-3px 0 9px}
 .cls{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
-.cls button{height:46px;border-radius:11px;border:1.5px solid var(--line2);background:#fff;font-weight:800;font-size:15px;color:var(--ink2);cursor:pointer}
+.cls button{height:46px;min-width:0;padding:0 2px;border-radius:11px;border:1.5px solid var(--line2);background:#fff;font-weight:800;font-size:clamp(11px,3.7vw,15px);color:var(--ink2);cursor:pointer;white-space:nowrap;overflow:hidden;letter-spacing:-.02em}
+
 .cls button.on{background:var(--blue);border-color:var(--blue);color:#fff}
-.cls button .ck{font-size:11px;margin-left:1px;color:var(--ok)}
+.cls button .ck{font-size:.72em;margin-left:1px;color:var(--ok)}
 .cls button.on .ck{color:#fff}
 .cls button:disabled{background:#f1f3f1;color:#b4bdb6;border-color:#eceeec;cursor:default}
 .big{display:block;width:100%;height:54px;border-radius:14px;border:0;background:var(--blue);color:#fff;font-weight:800;font-size:16px;cursor:pointer}
@@ -120,7 +122,7 @@ label.big input{display:none}
 <div class="app">
   <div class="top"><small id="yr">혜원 체육의 날</small><h1 id="htitle">반티·선수 등록</h1></div>
   <div class="pad" id="main"><div class="loading">불러오는 중…</div></div>
-  <footer class="vf"><span id="ft">반티·선수 등록</span> · v1.1.0 · 배포 <span id="dep">2026-11-13 22:40</span> (KST)<br>ⓒKIMJINHO</footer>
+  <footer class="vf"><span id="ft">반티·선수 등록</span> · v1.1.1 · 배포 <span id="dep">2026-11-13 23:22</span> (KST)<br>ⓒKIMJINHO</footer>
 </div>
 <div class="ov" id="ov"><div class="dlg" role="dialog" aria-modal="true"><p id="dlgMsg"></p><div class="acts"><button class="no" id="dlgNo">취소</button><button class="ok" id="dlgOk">확인</button></div></div></div>
 <div class="toast" id="toast"></div>
