@@ -1,0 +1,208 @@
+<!-- 파일명: banti.html | @version 1.0.0 -->
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1d4ed8">
+<title>반티 사진 올리기</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<!--
+  혜원 체육의 날 — 반티 사진 올리기 (학생용, GitHub Pages)
+  @version 1.0.0
+  [1.0.0] 반 고르기 → 초대 코드(OTP, 그 반 코드 자리수만큼 칸) → 사진 올리기.
+          학년별 여는·닫는 시각은 관리자 «설정 › 반티 올리기 시간». 사진은 학교 계정 «혜원핏 사진 창고»에 저장.
+          구글 주소 밖이라 만 13세 미만 구글 계정 차단에 걸리지 않는다(GAS 는 JSON API 로만 부른다).
+-->
+<style>
+:root{--blue:#1d4ed8;--blue-d:#173ea9;--blue-t:#e8eefc;--ok:#16884f;--ok-t:#e6f5ec;--warn:#b45a09;--warn-t:#fff3e2;--danger:#d63a48;
+  --ink:#17211b;--ink2:#2b3a30;--muted:#55645a;--muted2:#7d8a80;--line:#e3e8e3;--line2:#d7ded8;--bg:#f5f7f4}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg)}
+body{font-family:Pretendard,-apple-system,system-ui,sans-serif;color:var(--ink);font-size:15px;line-height:1.5}
+button,input{font-family:inherit}
+.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+.top{background:#fff;padding:18px 18px 14px;border-bottom:1px solid var(--line)}
+.top small{color:var(--blue);font-weight:800;font-size:12px}
+.top h1{margin:2px 0 0;font-size:20px;letter-spacing:-.01em}
+.pad{padding:16px;flex:1}
+.loading{color:var(--muted2);text-align:center;padding:60px 16px}
+/* 학년 카드 */
+.gcard{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px}
+.gh{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.gh b{font-size:15px}
+.chip{font-size:11.5px;font-weight:800;padding:3px 9px;border-radius:99px;white-space:nowrap}
+.chip.open{background:var(--ok-t);color:var(--ok)}.chip.soon{background:var(--warn-t);color:var(--warn)}.chip.end{background:#eceeec;color:var(--muted2)}
+.when{font-size:12.5px;color:var(--muted2);margin:-3px 0 9px}
+.cls{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.cls button{height:46px;border-radius:11px;border:1.5px solid var(--line2);background:#fff;font-weight:800;font-size:15px;color:var(--ink2);cursor:pointer}
+.cls button.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.cls button .ck{font-size:11px;margin-left:1px;color:var(--ok)}
+.cls button.on .ck{color:#fff}
+.cls button:disabled{background:#f1f3f1;color:#b4bdb6;border-color:#eceeec;cursor:default}
+.big{display:block;width:100%;height:54px;border-radius:14px;border:0;background:var(--blue);color:#fff;font-weight:800;font-size:16px;cursor:pointer}
+.big:disabled{background:#c3cde3;cursor:default}
+.note{font-size:12.5px;text-align:center;color:var(--muted2);margin:10px 0 0}
+/* 반 표시 */
+.who{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:22px}
+.who .k{width:46px;height:46px;border-radius:12px;background:var(--blue-t);color:var(--blue-d);display:grid;place-items:center;font-weight:900;font-size:16px;flex:none}
+.who p{margin:0;font-size:12.5px;color:var(--muted)}.who b{display:block;font-size:15px;color:var(--ink)}
+.who button{margin-left:auto;border:0;background:none;color:var(--blue);font-weight:700;font-size:13px;cursor:pointer;padding:8px 4px}
+/* OTP */
+.otpT{text-align:center;font-size:18px;font-weight:800;margin:0 0 4px}
+.otpS{text-align:center;font-size:13px;color:var(--muted);margin:0 0 18px}
+.otp{position:relative;display:flex;justify-content:center;gap:8px;margin:0 auto 10px;width:max-content;max-width:100%}
+.otp span{width:clamp(38px,12vw,52px);height:62px;border-radius:13px;background:#fff;border:2px solid var(--line2);display:grid;place-items:center;font-size:27px;font-weight:900;font-variant-numeric:tabular-nums}
+.otp span.f{border-color:var(--ink2)}
+.otp.focus span.cur{border-color:var(--blue);box-shadow:0 0 0 4px var(--blue-t)}
+.otp.focus span.cur:empty::after{content:"";width:2px;height:26px;background:var(--blue);animation:blink 1s steps(1) infinite}
+.otp.bad span{border-color:var(--danger);animation:shake .35s}
+.otp input{position:absolute;inset:0;width:100%;height:100%;opacity:0;font-size:16px;border:0;caret-color:transparent;color:transparent;background:transparent}
+@keyframes blink{50%{opacity:0}}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.msg{text-align:center;font-size:13.5px;min-height:20px;margin-bottom:12px;color:var(--muted2)}
+.msg.err{color:var(--danger);font-weight:700}
+/* 사진 */
+.ph{aspect-ratio:1/1;border-radius:16px;overflow:hidden;background:#e9ede9;display:grid;place-items:center;color:var(--muted2);font-weight:700;margin-bottom:10px;position:relative}
+.ph img{width:100%;height:100%;object-fit:cover}
+.ph em{position:absolute;left:10px;top:10px;font-style:normal;font-size:11.5px;font-weight:800;background:rgba(255,255,255,.92);color:var(--ink2);padding:4px 9px;border-radius:99px}
+.ph .empty{display:flex;flex-direction:column;align-items:center;gap:8px}
+.ph .empty svg{width:64px;height:64px;fill:none;stroke:#b4bdb6;stroke-width:1.4}
+.savedat{font-size:12.5px;color:var(--muted2);text-align:center;margin:6px 0 14px;min-height:18px}
+.savedat.ok{color:var(--ok);font-weight:700}
+label.big{text-align:center;line-height:54px}
+label.big input{display:none}
+.tip{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:12px}
+.closed{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center;color:var(--muted)}
+.closed b{display:block;color:var(--ink);font-size:16px;margin-bottom:4px}
+.vf{text-align:center;color:var(--muted2);font-size:11.5px;line-height:1.7;padding:22px 0 18px}
+.ov{position:fixed;inset:0;background:rgba(15,25,18,.45);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+.ov.show{display:flex}
+.dlg{background:#fff;border-radius:18px;width:min(380px,100%);padding:20px}
+.dlg p{margin:0 0 16px;font-size:16px;line-height:1.6;white-space:pre-wrap}
+.dlg .acts{display:flex;gap:8px}
+.dlg .acts button{flex:1;height:46px;border-radius:12px;border:0;font-weight:800;font-size:15px;cursor:pointer}
+.dlg .ok{background:var(--blue);color:#fff}.dlg .no{background:#eef1ee;color:var(--ink2)}
+.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(16px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-weight:700;font-size:14px;opacity:0;transition:all .2s ease-out;z-index:60;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.bar{height:6px;border-radius:99px;background:var(--blue-t);overflow:hidden;margin:4px 0 12px;display:none}
+.bar.show{display:block}
+.bar i{display:block;height:100%;width:0;background:var(--blue);transition:width .3s}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top"><small id="yr">혜원 체육의 날</small><h1 id="htitle">반티 사진 올리기</h1></div>
+  <div class="pad" id="main"><div class="loading">불러오는 중…</div></div>
+  <footer class="vf"><span id="ft">반티 사진 올리기</span> · v1.0.0 · 배포 <span id="dep">2026-11-13 16:35</span> (KST)<br>ⓒKIMJINHO</footer>
+</div>
+<div class="ov" id="ov"><div class="dlg" role="dialog" aria-modal="true"><p id="dlgMsg"></p><div class="acts"><button class="no" id="dlgNo">취소</button><button class="ok" id="dlgOk">확인</button></div></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const API='https://script.google.com/macros/s/AKfycbxLj-YCN1PJIQ5r4KnbaLyeCD997tRVkZoKJQ9Y-Fan75w4xx-4YJjUGsMZ-binoVeN/exec';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ss={get(k){try{return JSON.parse(sessionStorage.getItem(k)||'null')}catch(e){return null}},set(k,v){try{sessionStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{sessionStorage.removeItem(k)}catch(e){}}};
+
+/* 구글 계정 쿠키 없이 부른다(크로스오리진 fetch) — POST 는 text/plain 이라 preflight 가 없다 */
+async function get(a,q){const r=await fetch(API+'?a='+a+(q?'&'+new URLSearchParams(q):''));return r.json();}
+async function post(o){const r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(o)});return r.json();}
+
+let dlgRes=null;
+function uiDialog(m,cancel){return new Promise(r=>{$('#dlgMsg').textContent=m;$('#dlgNo').style.display=cancel?'':'none';$('#ov').classList.add('show');dlgRes=r;setTimeout(()=>$('#dlgOk').focus(),30);});}
+function dlgClose(v){$('#ov').classList.remove('show');const r=dlgRes;dlgRes=null;r&&r(v);}
+$('#dlgOk').onclick=()=>dlgClose(true);$('#dlgNo').onclick=()=>dlgClose(false);
+document.addEventListener('keydown',e=>{if(!$('#ov').classList.contains('show'))return;if(e.key==='Enter'){e.preventDefault();dlgClose(true);}if(e.key==='Escape'){e.preventDefault();dlgClose(false);}});
+const uiAlert=m=>uiDialog(m,false), uiConfirm=m=>uiDialog(m,true);
+let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2200);}
+
+const WK='일월화수목금토';
+/* '2026-11-20T18:00' → '11월 20일(금) 18:00' */
+function fmt(v){if(!v)return '';const m=v.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}:\d{2})/);if(!m)return v;const d=new Date(+m[1],+m[2]-1,+m[3]);return `${+m[2]}월 ${+m[3]}일(${WK[d.getDay()]}) ${m[4]}`;}
+function whenText(g){if(g.state==='open')return g.to?fmt(g.to)+' 까지':'지금 올릴 수 있어요';
+  if(g.state==='soon')return fmt(g.from)+' 부터'+(g.to?' · '+fmt(g.to)+' 까지':'');
+  return g.to?fmt(g.to)+' 에 닫혔어요':'지금은 올릴 수 없어요';}
+const CHIP={open:['open','지금 올릴 수 있어요'],soon:['soon','곧 열려요'],end:['end','마감']};
+
+let B=null;                                // bantiBoot
+const S={key:'',code:'',d:null,fresh:false};   // 고른 반·통과한 코드·사진 정보
+const saved=ss.get('sdb');if(saved){S.key=saved.key||'';S.code=saved.code||'';}
+
+/* ① 반 고르기 */
+function vPick(){
+  const h=[3,2,1].map(g=>{const st=B.grades[g]||{state:'end'},c=CHIP[st.state]||CHIP.end,open=st.state==='open';
+    return `<div class="gcard"><div class="gh"><b>${g}학년</b><span class="chip ${c[0]}">${c[1]}</span></div><p class="when">${esc(whenText(st))}</p>
+      <div class="cls">${[1,2,3,4,5].map(n=>{const k=g+'-'+n;return `<button data-k="${k}" class="${S.key===k&&open?'on':''}" ${open?'':'disabled'}>${n}반${B.done[k]?'<span class="ck">✓</span>':''}</button>`}).join('')}</div></div>`}).join('');
+  const sel=S.key&&(B.grades[S.key[0]]||{}).state==='open';
+  $('#main').innerHTML=h+`<button class="big" id="go" ${sel?'':'disabled'}>${sel?S.key+' 반으로 계속':'우리 반을 눌러 주세요'}</button><p class="note">✓ 표시는 이미 사진을 올린 반이에요</p>`;
+  $('#main').querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{S.key=b.dataset.k;vPick();});
+  $('#go').onclick=()=>{S.code='';vCode();};
+}
+function who(btn){const st=B.grades[S.key[0]]||{};return `<div class="who"><div class="k">${S.key}</div><div><b>${S.key[0]}학년 ${S.key[2]}반</b><p>${esc(whenText(st))}</p></div><button id="back">${btn}</button></div>`;}
+
+/* ② 초대 코드 — 그 반 코드 자리수만큼 칸. 진짜 입력칸 하나를 칸들 위에 투명하게 덮는다(붙여넣기·자동완성도 된다) */
+function vCode(msg){
+  const n=B.codeLen[S.key]||5;
+  $('#main').innerHTML=who('반 바꾸기')+`<p class="otpT">초대 코드를 넣어 주세요</p><p class="otpS">선생님께 받은 숫자 ${n}자리</p>
+    <div class="otp" id="otp">${'<span></span>'.repeat(n)}<input id="oi" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" maxlength="${n}" aria-label="초대 코드 ${n}자리"></div>
+    <div class="msg ${msg?'err':''}" id="msg">${esc(msg||'다 넣으면 저절로 확인해요')}</div>`;
+  $('#back').onclick=()=>{S.key='';ss.del('sdb');vPick();};
+  const box=$('#otp'),inp=$('#oi'),sp=[...box.querySelectorAll('span')];
+  let busy=false;
+  const paint=()=>{const v=inp.value;sp.forEach((s,i)=>{s.textContent=v[i]||'';s.classList.toggle('f',!!v[i]);s.classList.toggle('cur',i===Math.min(v.length,n-1)&&(v.length<n));});};
+  inp.oninput=async()=>{inp.value=inp.value.replace(/\D/g,'').slice(0,n);box.classList.remove('bad');$('#msg').className='msg';$('#msg').textContent='다 넣으면 저절로 확인해요';paint();
+    if(inp.value.length===n&&!busy){busy=true;$('#msg').textContent='확인하는 중…';
+      try{const r=await post({a:'bantiLogin',key:S.key,code:inp.value});
+        if(!r.ok){busy=false;box.classList.add('bad');$('#msg').className='msg err';$('#msg').textContent=r.msg;setTimeout(()=>{inp.value='';paint();inp.focus();},450);return;}
+        S.code=inp.value;S.d=r;S.fresh=false;ss.set('sdb',{key:S.key,code:S.code});inp.blur();vUp();}
+      catch(e){busy=false;$('#msg').className='msg err';$('#msg').textContent='연결이 안 돼요. 다시 넣어 주세요.';inp.value='';paint();}}};
+  inp.onfocus=()=>{box.classList.add('focus');paint();};inp.onblur=()=>box.classList.remove('focus');
+  paint();setTimeout(()=>inp.focus(),60);
+}
+
+/* ③ 사진 올리기 */
+const PH={};
+async function photo(fid){if(!fid)return null;if(PH[fid])return PH[fid];
+  try{const r=await get('photo',{fid,size:'w1000'});if(r.ok){PH[fid]=`data:${r.mime};base64,${r.base64}`;return PH[fid];}}catch(e){}return null;}
+function vUp(){
+  const d=S.d,open=d.state==='open',has=!!d.banti.fid;
+  const shirt='<svg viewBox="0 0 24 24"><path d="M8 3l-5 3 2 4 2-1v12h10V9l2 1 2-4-5-3a4 4 0 01-8 0z"/></svg>';
+  $('#main').innerHTML=who('나가기').replace('margin-bottom:22px','')+`
+    <div class="ph" id="ph">${has?'<span>사진 불러오는 중…</span>':`<div class="empty">${shirt}<span>아직 올린 사진이 없어요</span></div>`}</div>
+    <div class="bar" id="bar"><i></i></div>
+    <div class="savedat ${S.fresh?'ok':''}">${d.banti.time?(S.fresh?'✅ 저장됨 · ':'마지막 저장 · ')+esc(d.banti.time):''}</div>
+    ${open?`<label class="big">${has?'사진 바꾸기':'사진 올리기'}<input type="file" accept="image/*" id="bf"></label>`
+      :`<div class="closed"><b>${d.state==='soon'?'아직 올릴 시간이 아니에요':'반티 올리기가 마감되었어요'}</b>${esc(whenText(B.grades[S.key[0]]||{}))}</div>`}
+    <div class="tip">• 반티 앞면이 잘 보이는 사진 1장<br>• 다시 올리면 앞 사진은 바뀌어요(마감 전까지)<br>• 큰 사진은 저절로 줄여서 올려요</div>`;
+  $('#back').onclick=()=>{S.d=null;S.code='';ss.del('sdb');B&&boot(false);};
+  if(has)photo(d.banti.fid).then(s=>{const p=$('#ph');if(p&&s)p.innerHTML=`<em>지금 올라간 반티</em><img alt="${esc(S.key)} 반티" src="${s}">`;else if(p)p.innerHTML='<span>사진을 불러오지 못했어요</span>';});
+  const f=$('#bf');if(f)f.onchange=()=>up(f.files[0]);
+}
+function shrink(file,max=1400){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.86).split(',')[1]);};im.onerror=()=>rej(new Error('사진을 읽지 못했어요.'));im.src=fr.result;};fr.readAsDataURL(file);});}
+async function up(file){if(!file)return;
+  if(S.d.banti.fid&&!await uiConfirm('지금 반티 사진을 새 사진으로 바꿀까요?')){vUp();return;}
+  const bar=$('#bar'),bi=bar.querySelector('i'),lab=$('label.big');bar.classList.add('show');lab.style.pointerEvents='none';lab.firstChild.textContent='올리는 중…';
+  let p=5;bi.style.width=p+'%';const t=setInterval(()=>{p=Math.min(92,p+(92-p)*.08);bi.style.width=p+'%';},200);
+  try{const b64=await shrink(file);
+    const r=await post({a:'repBanti',key:S.key,code:S.code,b64,mime:'image/jpeg'});
+    clearInterval(t);
+    if(!r.ok){bar.classList.remove('show');await uiAlert(r.msg);vUp();return;}
+    bi.style.width='100%';PH[r.fid]='data:image/jpeg;base64,'+b64;S.d.banti={fid:r.fid,time:r.savedAt};S.fresh=true;B.done[S.key]=true;
+    setTimeout(()=>{toast('✅ 저장됨');vUp();},250);}
+  catch(e){clearInterval(t);bar.classList.remove('show');await uiAlert('올리지 못했어요. 다시 해 주세요.');vUp();}}
+
+/* 시작 — 새로고침해도 같은 탭에서는 반·코드를 기억한다 */
+async function boot(resume){
+  $('#main').innerHTML='<div class="loading">불러오는 중…</div>';
+  try{B=await get('bantiBoot');if(!B.ok)throw new Error(B.msg);}
+  catch(e){$('#main').innerHTML='<div class="loading">연결이 안 돼요. 잠시 뒤 새로고침해 주세요.</div>';return;}
+  $('#yr').textContent=B.year+' 혜원 체육의 날';
+  if(resume&&S.key&&S.code){try{const r=await post({a:'bantiLogin',key:S.key,code:S.code});if(r.ok){S.d=r;vUp();return;}}catch(e){}ss.del('sdb');S.code='';}
+  vPick();
+}
+new MutationObserver(()=>{const h=$('#htitle'),f=$('#ft');if(f.textContent!==h.textContent)f.textContent=h.textContent;}).observe($('#htitle'),{childList:true,characterData:true,subtree:true});
+boot(true);
+</script>
+</body>
+</html>
