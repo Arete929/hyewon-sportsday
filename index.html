@@ -1,4 +1,4 @@
-<!-- 파일명: index.html | @version 2.0.0 — 학생 배부용 사이트: 홈·시간표·선수 명단·점수판(대진표)·반티 모아 보기·응원 음원 추천 -->
+<!-- 파일명: index.html | @version 2.1.0 — 학생 배부용 사이트: 홈·시간표·선수 명단·점수판(대진표)·반티 모아 보기·응원 음원 추천 -->
 <!doctype html>
 <html lang="ko">
 <head>
@@ -269,7 +269,7 @@ button,input{font-family:inherit}
 
 <script>
 const API='https://script.google.com/macros/s/AKfycbxLj-YCN1PJIQ5r4KnbaLyeCD997tRVkZoKJQ9Y-Fan75w4xx-4YJjUGsMZ-binoVeN/exec';
-const PAGE_VERSION='2.0.0', PAGE_DEPLOYED='2026-11-13 22:40';
+const PAGE_VERSION='2.1.0', PAGE_DEPLOYED='2026-11-14 00:05';
 const BANTI_URL='banti.html';
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -294,6 +294,8 @@ let SONGS=null, PLAYERS=null, SG_FRESH='', SG_HL=0;
 const PH={};
 
 /* ───── 공통 계산 ───── */
+/* 학년별 참여 학급 — 관리자 설정 «행사·일정» */
+const CNs=g=>Array.from({length:Math.min(5,Math.max(1,+((B.cfg.classN||{})[g])||5))},(_,i)=>i+1);
 const EVN=k=>((B&&B.events.find(e=>e.key===k))||{name:k==='tug'?'줄다리기':k}).name;
 const WK='일월화수목금토';
 function kst(){const n=new Date(Date.now()+9*36e5);return {d:n.toISOString().slice(0,10),m:n.getUTCHours()*60+n.getUTCMinutes()};}
@@ -406,7 +408,7 @@ function vTime(){
   if(!PLAYERS){$('#app').innerHTML=head+'<div class="loading">선수 명단 불러오는 중…</div>'+footer();bindS();
     post({a:'players',sid:ME.sid,name:ME.name}).then(r=>{if(!r.ok){uiAlert(r.msg);return;}PLAYERS=r.players;if(TAB==='time'&&SUB==='players')vTime();}).catch(()=>toast('연결이 안 돼요'));return;}
   const ev=B.events.find(e=>e.key===PEV)||B.events[0];
-  const cards=[1,2,3,4,5].map(n=>{const k=G+'-'+n,ns=((PLAYERS[k]||{})[ev.key])||[];
+  const cards=CNs(G).map(n=>{const k=G+'-'+n,ns=((PLAYERS[k]||{})[ev.key])||[];
     return `<div class="pc ${ME.key===k?'mine':''}"><h3>${esc(k)}${ME.key===k?' <span class="pl b">우리 반</span>':''}<small class="num">${ns.length}/${ev.quota}명</small></h3>
       <div class="nm">${ns.length?ns.map(x=>`<span class="${ME.key===k&&x===ME.name?'me':''}">${esc(x)}</span>`).join(''):'<em>아직 등록 전이에요</em>'}</div></div>`;}).join('');
   $('#app').innerHTML=head+`<div class="chipr blue">${B.events.map(e=>`<button data-e="${e.key}" class="${e.key===ev.key?'on':''}">${esc(e.name)}</button>`).join('')}</div>${gchips()}
@@ -429,7 +431,7 @@ function vScore(){
     bindC();bindG(vScore);return;
   }
   const S=B.scores.rows;
-  const rows=[1,2,3,4,5].map(n=>({k:G+'-'+n,...(S[G+'-'+n]||{total:0,rank:'',ranks:{},pts:{}})})).sort((a,b)=>b.total-a.total||a.k.localeCompare(b.k));
+  const rows=CNs(G).map(n=>({k:G+'-'+n,...(S[G+'-'+n]||{total:0,rank:'',ranks:{},pts:{}})})).sort((a,b)=>b.total-a.total||a.k.localeCompare(b.k));
   const mx=Math.max(1,...rows.map(r=>r.total));
   const RK=[['flip','판뒤집기'],['rope','단체줄넘기'],['leg','2인3각'],['tug','줄다리기'],['relay','이어달리기']];
   const sw=k=>{const f=B.cfg.bantiShow&&(B.banti[k]||{}).fid;return `<div class="sw" ${f?`data-fid="${esc(f)}"`:''}>${shirt(k===my?'var(--blue)':'#dfe5df')}</div>`;};
@@ -450,7 +452,7 @@ function vBanti(){
   const head=`<div class="ph-h"><h1 id="htitle">우리 학교 반티</h1><p>반 대표가 올린 반티 · 누르면 크게 보여요</p></div>`;
   if(!B.cfg.bantiShow){$('#app').innerHTML=head+`<div class="empty">반티는 선생님이 공개하면 여기에서 모두 볼 수 있어요.<br>반 대표는 아래에서 우리 반 반티를 올려요.<br><a class="big blue" style="display:grid;place-items:center;margin-top:12px;text-decoration:none" href="${BANTI_URL}">반 대표 — 반티 올리기</a></div>${footer()}`;return;}
   const my=ME?ME.key:'';
-  $('#app').innerHTML=head+gchips()+`<div class="gal">${[1,2,3,4,5].map(n=>{const k=G+'-'+n,b=B.banti[k]||{};
+  $('#app').innerHTML=head+gchips()+`<div class="gal">${CNs(G).map(n=>{const k=G+'-'+n,b=B.banti[k]||{};
     return `<button class="gc ${k===my?'mine':''}" data-k="${k}" ${b.fid?'':'disabled'}><div class="im" ${b.fid?`data-fid="${esc(b.fid)}"`:''}>${b.fid?'불러오는 중…':'아직 안 올렸어요'}</div>
       <div class="cap"><b>${esc(k)}</b><em style="${k===my?'color:var(--blue)':''}">${k===my?'우리 반':esc(b.teacher?b.teacher+' T':'')}</em></div></button>`;}).join('')}</div>${footer()}`;
   bindG(vBanti);
