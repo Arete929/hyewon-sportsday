@@ -1,15 +1,16 @@
-<!-- 파일명: banti.html | @version 1.0.0 -->
+<!-- 파일명: banti.html | @version 1.1.0 -->
 <!doctype html>
 <html lang="ko">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1d4ed8">
-<title>반티 사진 올리기</title>
+<title>반티·선수 등록</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 <!--
   혜원 체육의 날 — 반티 사진 올리기 (학생용, GitHub Pages)
-  @version 1.0.0
+  @version 1.1.0
+  [1.1.0] 코드로 들어간 뒤 «반티 사진»과 «선수 등록»(종목별로 나갈 친구 고르기)을 골라서. 반 고르기는 반티 시간과 상관없이 늘 된다.
   [1.0.0] 반 고르기 → 초대 코드(OTP, 그 반 코드 자리수만큼 칸) → 사진 올리기.
           학년별 여는·닫는 시각은 관리자 «설정 › 반티 올리기 시간». 사진은 학교 계정 «혜원핏 사진 창고»에 저장.
           구글 주소 밖이라 만 13세 미만 구글 계정 차단에 걸리지 않는다(GAS 는 JSON API 로만 부른다).
@@ -88,13 +89,38 @@ label.big input{display:none}
 .bar{height:6px;border-radius:99px;background:var(--blue-t);overflow:hidden;margin:4px 0 12px;display:none}
 .bar.show{display:block}
 .bar i{display:block;height:100%;width:0;background:var(--blue);transition:width .3s}
+/* 반티 / 선수 등록 고르기 */
+.mseg{display:flex;background:#e9ede9;border-radius:12px;padding:3px;margin:-8px 0 14px}
+.mseg button{flex:1;height:40px;border:0;border-radius:10px;background:transparent;font-weight:800;font-size:14px;color:var(--muted);cursor:pointer}
+.mseg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.mseg button em{font-style:normal;font-size:12px;color:var(--ok);margin-left:3px}
+/* 선수 등록 */
+.evpal{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
+.evpal::-webkit-scrollbar{height:0}
+.evpal button{flex:none;height:40px;padding:0 13px;border-radius:999px;border:1.5px solid var(--line2);background:#fff;font-weight:700;font-size:13.5px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.evpal button.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.evpal button em{font-style:normal;font-weight:800;margin-left:4px;opacity:.85}
+.need{margin:10px 0 0;font-size:13.5px;display:flex;justify-content:space-between;align-items:center}
+.need b{font-size:16px}
+.need .ok{color:var(--ok);font-weight:800}
+.picked{margin:8px 0 0;display:flex;flex-wrap:wrap;gap:6px;min-height:44px;padding:8px;border-radius:12px;background:var(--blue-t)}
+.picked span{height:30px;display:inline-flex;align-items:center;padding:0 11px;border-radius:999px;background:var(--blue);color:#fff;font-size:13px;font-weight:700}
+.picked em{font-style:normal;color:var(--muted2);font-size:13px;align-self:center;padding-left:4px}
+.roster{margin:12px 0 0;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.roster button{min-height:52px;border-radius:11px;border:1.5px solid var(--line2);background:#fff;font-weight:700;font-size:14px;color:var(--ink2);line-height:1.15;cursor:pointer;padding:4px}
+.roster button small{display:block;font-size:10.5px;color:var(--muted2);font-weight:600;margin-top:2px}
+.roster button.on{border-color:var(--blue);background:var(--blue-t);color:var(--blue-d)}
+.roster button.no{opacity:.4;text-decoration:line-through}
+.roster button.cf{border-color:#f1c27a;background:var(--warn-t)}
+.rule{margin:12px 0 0;font-size:12.5px;color:var(--warn);background:var(--warn-t);border-radius:10px;padding:9px 11px;line-height:1.5}
+.save{margin-top:14px}
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="top"><small id="yr">혜원 체육의 날</small><h1 id="htitle">반티 사진 올리기</h1></div>
+  <div class="top"><small id="yr">혜원 체육의 날</small><h1 id="htitle">반티·선수 등록</h1></div>
   <div class="pad" id="main"><div class="loading">불러오는 중…</div></div>
-  <footer class="vf"><span id="ft">반티 사진 올리기</span> · v1.0.0 · 배포 <span id="dep">2026-11-13 16:35</span> (KST)<br>ⓒKIMJINHO</footer>
+  <footer class="vf"><span id="ft">반티·선수 등록</span> · v1.1.0 · 배포 <span id="dep">2026-11-13 22:40</span> (KST)<br>ⓒKIMJINHO</footer>
 </div>
 <div class="ov" id="ov"><div class="dlg" role="dialog" aria-modal="true"><p id="dlgMsg"></p><div class="acts"><button class="no" id="dlgNo">취소</button><button class="ok" id="dlgOk">확인</button></div></div></div>
 <div class="toast" id="toast"></div>
@@ -123,19 +149,19 @@ function fmt(v){if(!v)return '';const m=v.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}
 function whenText(g){if(g.state==='open')return g.to?fmt(g.to)+' 까지':'지금 올릴 수 있어요';
   if(g.state==='soon')return fmt(g.from)+' 부터'+(g.to?' · '+fmt(g.to)+' 까지':'');
   return g.to?fmt(g.to)+' 에 닫혔어요':'지금은 올릴 수 없어요';}
-const CHIP={open:['open','지금 올릴 수 있어요'],soon:['soon','곧 열려요'],end:['end','마감']};
+const CHIP={open:['open','반티 올리기 열림'],soon:['soon','반티 곧 열려요'],end:['end','반티 마감']};
 
 let B=null;                                // bantiBoot
-const S={key:'',code:'',d:null,fresh:false};   // 고른 반·통과한 코드·사진 정보
+const S={key:'',code:'',d:null,fresh:false,mode:'banti',ev:'',pick:null,pfresh:false};   // 고른 반·통과한 코드·사진 정보
 const saved=ss.get('sdb');if(saved){S.key=saved.key||'';S.code=saved.code||'';}
 
 /* ① 반 고르기 */
 function vPick(){
-  const h=[3,2,1].map(g=>{const st=B.grades[g]||{state:'end'},c=CHIP[st.state]||CHIP.end,open=st.state==='open';
+  const h=[3,2,1].map(g=>{const st=B.grades[g]||{state:'end'},c=CHIP[st.state]||CHIP.end;
     return `<div class="gcard"><div class="gh"><b>${g}학년</b><span class="chip ${c[0]}">${c[1]}</span></div><p class="when">${esc(whenText(st))}</p>
-      <div class="cls">${[1,2,3,4,5].map(n=>{const k=g+'-'+n;return `<button data-k="${k}" class="${S.key===k&&open?'on':''}" ${open?'':'disabled'}>${n}반${B.done[k]?'<span class="ck">✓</span>':''}</button>`}).join('')}</div></div>`}).join('');
-  const sel=S.key&&(B.grades[S.key[0]]||{}).state==='open';
-  $('#main').innerHTML=h+`<button class="big" id="go" ${sel?'':'disabled'}>${sel?S.key+' 반으로 계속':'우리 반을 눌러 주세요'}</button><p class="note">✓ 표시는 이미 사진을 올린 반이에요</p>`;
+      <div class="cls">${[1,2,3,4,5].map(n=>{const k=g+'-'+n;return `<button data-k="${k}" class="${S.key===k?'on':''}">${n}반${B.done[k]?'<span class="ck">✓</span>':''}</button>`}).join('')}</div></div>`}).join('');
+  const sel=!!S.key;
+  $('#main').innerHTML=h+`<button class="big" id="go" ${sel?'':'disabled'}>${sel?S.key+' 반으로 계속':'우리 반을 눌러 주세요'}</button><p class="note">✓ 표시는 반티 사진을 이미 올린 반이에요<br>코드로 들어가면 반티 사진과 종목별 선수 등록을 할 수 있어요</p>`;
   $('#main').querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{S.key=b.dataset.k;vPick();});
   $('#go').onclick=()=>{S.code='';vCode();};
 }
@@ -155,7 +181,7 @@ function vCode(msg){
     if(inp.value.length===n&&!busy){busy=true;$('#msg').textContent='확인하는 중…';
       try{const r=await post({a:'bantiLogin',key:S.key,code:inp.value});
         if(!r.ok){busy=false;box.classList.add('bad');$('#msg').className='msg err';$('#msg').textContent=r.msg;setTimeout(()=>{inp.value='';paint();inp.focus();},450);return;}
-        S.code=inp.value;S.d=r;S.fresh=false;ss.set('sdb',{key:S.key,code:S.code});inp.blur();vUp();}
+        S.code=inp.value;S.d=r;S.fresh=false;S.pick=null;S.pfresh=false;ss.set('sdb',{key:S.key,code:S.code});inp.blur();vMain();}
       catch(e){busy=false;$('#msg').className='msg err';$('#msg').textContent='연결이 안 돼요. 다시 넣어 주세요.';inp.value='';paint();}}};
   inp.onfocus=()=>{box.classList.add('focus');paint();};inp.onblur=()=>box.classList.remove('focus');
   paint();setTimeout(()=>inp.focus(),60);
@@ -168,14 +194,14 @@ async function photo(fid){if(!fid)return null;if(PH[fid])return PH[fid];
 function vUp(){
   const d=S.d,open=d.state==='open',has=!!d.banti.fid;
   const shirt='<svg viewBox="0 0 24 24"><path d="M8 3l-5 3 2 4 2-1v12h10V9l2 1 2-4-5-3a4 4 0 01-8 0z"/></svg>';
-  $('#main').innerHTML=who('나가기').replace('margin-bottom:22px','')+`
+  $('#main').innerHTML=who('나가기')+mseg()+`
     <div class="ph" id="ph">${has?'<span>사진 불러오는 중…</span>':`<div class="empty">${shirt}<span>아직 올린 사진이 없어요</span></div>`}</div>
     <div class="bar" id="bar"><i></i></div>
     <div class="savedat ${S.fresh?'ok':''}">${d.banti.time?(S.fresh?'✅ 저장됨 · ':'마지막 저장 · ')+esc(d.banti.time):''}</div>
     ${open?`<label class="big">${has?'사진 바꾸기':'사진 올리기'}<input type="file" accept="image/*" id="bf"></label>`
       :`<div class="closed"><b>${d.state==='soon'?'아직 올릴 시간이 아니에요':'반티 올리기가 마감되었어요'}</b>${esc(whenText(B.grades[S.key[0]]||{}))}</div>`}
     <div class="tip">• 반티 앞면이 잘 보이는 사진 1장<br>• 다시 올리면 앞 사진은 바뀌어요(마감 전까지)<br>• 큰 사진은 저절로 줄여서 올려요</div>`;
-  $('#back').onclick=()=>{S.d=null;S.code='';ss.del('sdb');B&&boot(false);};
+  bindMain();
   if(has)photo(d.banti.fid).then(s=>{const p=$('#ph');if(p&&s)p.innerHTML=`<em>지금 올라간 반티</em><img alt="${esc(S.key)} 반티" src="${s}">`;else if(p)p.innerHTML='<span>사진을 불러오지 못했어요</span>';});
   const f=$('#bf');if(f)f.onchange=()=>up(f.files[0]);
 }
@@ -192,16 +218,61 @@ async function up(file){if(!file)return;
     setTimeout(()=>{toast('✅ 저장됨');vUp();},250);}
   catch(e){clearInterval(t);bar.classList.remove('show');await uiAlert('올리지 못했어요. 다시 해 주세요.');vUp();}}
 
+/* 반티 / 선수 등록 */
+function mseg(){const d=S.d,n=d.events.filter(e=>(d.players[e.key]||[]).length>=e.quota).length;
+  return `<div class="mseg"><button data-m="banti" class="${S.mode==='banti'?'on':''}">반티 사진${d.banti.fid?'<em>✓</em>':''}</button><button data-m="players" class="${S.mode==='players'?'on':''}">선수 등록<em>${n}/${d.events.length}</em></button></div>`;}
+function bindMain(){
+  $('#back').onclick=()=>{S.d=null;S.code='';ss.del('sdb');B&&boot(false);};
+  $('#main').querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{S.mode=b.dataset.m;S.pick=null;vMain();});}
+function vMain(){
+  $('#htitle').textContent=S.mode==='players'?'선수 등록':'반티 사진 올리기';
+  if(S.mode==='players')vPlayers();else vUp();}
+const EVN=k=>(S.d.events.find(e=>e.key===k)||{name:k}).name;
+function vPlayers(){
+  const d=S.d;if(!S.ev||!d.events.some(e=>e.key===S.ev))S.ev=d.events[0].key;
+  const ev=d.events.find(e=>e.key===S.ev);
+  if(S.pick===null)S.pick=(d.players[ev.key]||[]).slice();
+  const other={};d.events.forEach(e=>{if(e.key!==ev.key)(d.players[e.key]||[]).forEach(x=>(other[x]=other[x]||[]).push(e.key));});
+  const partner={relay:'leg',leg:'relay',flip:'rope',rope:'flip'}[ev.key];
+  const nm={};d.roster.forEach(x=>nm[x.sid]=x.name);
+  const left=ev.quota-S.pick.length;
+  $('#main').innerHTML=who('나가기')+mseg()+`<div class="evpal">${d.events.map(e=>`<button data-e="${e.key}" class="${e.key===ev.key?'on':''}">${esc(e.name)}<em>${(e.key===ev.key?S.pick:(d.players[e.key]||[])).length}/${e.quota}</em></button>`).join('')}</div>
+    <div class="need"><span>${esc(ev.name)} <b class="num">${S.pick.length}/${ev.quota}</b></span>${left===0?'<span class="ok">다 골랐어요</span>':left>0?`<span>${left}명 더</span>`:''}</div>
+    <div class="picked">${S.pick.map(x=>`<span>${esc(nm[x]||x)}</span>`).join('')||'<em>아래에서 나갈 친구를 눌러요</em>'}</div>
+    ${d.roster.length?`<div class="roster">${d.roster.map(x=>{const on=S.pick.includes(x.sid),o=other[x.sid]||[];const no=!on&&partner&&o.includes(partner),cf=!on&&!no&&o.length>=2;
+      return `<button data-s="${x.sid}" class="${on?'on':no?'no':cf?'cf':''}" ${no?'disabled':''}>${esc(x.name)}<small>${x.sid.slice(2)}번${o.length?' · '+o.map(EVN).join('·'):''}</small></button>`}).join('')}</div>`:'<div class="closed" style="margin-top:12px">아직 우리 반 명단이 없어요. 체육 선생님께 말씀드려 주세요.</div>'}
+    <div class="rule">한 사람은 최소 1종목, 최대 2종목! 이어달리기·2인3각 중 하나, 판뒤집기·단체줄넘기 중 하나만 나갈 수 있어요.${partner?` 줄 그은 친구는 «${esc(EVN(partner))}»에 이미 들어가 있어요.`:''} 줄다리기는 반 전체가 나가요.</div>
+    ${d.repOpen?`<button class="big save" id="psave">${esc(ev.name)} 저장</button>`:'<div class="closed" style="margin-top:12px"><b>선수 등록이 마감되었어요</b>바꿀 게 있으면 체육 선생님께 말씀드려 주세요.</div>'}
+    <div class="savedat ${S.pfresh?'ok':''}" style="margin-top:8px">${d.savedAt?(S.pfresh?'✅ 저장됨 · ':'마지막 저장 · ')+esc(d.savedAt):''}</div>`;
+  bindMain();
+  $('#main').querySelectorAll('[data-e]').forEach(b=>b.onclick=async()=>{
+    const cur=(d.players[ev.key]||[]).slice().sort().join(),now=S.pick.slice().sort().join();
+    if(cur!==now&&d.repOpen&&!await uiConfirm(`«${ev.name}»에서 고른 것을 아직 저장하지 않았어요.\n저장하지 않고 다른 종목으로 갈까요?`))return;
+    S.ev=b.dataset.e;S.pick=null;S.pfresh=false;vPlayers();});
+  $('#main').querySelectorAll('.roster button').forEach(b=>b.onclick=()=>{const x=b.dataset.s;
+    if(S.pick.includes(x))S.pick=S.pick.filter(y=>y!==x);
+    else{if(S.pick.length>=ev.quota){toast(ev.name+'은(는) '+ev.quota+'명까지예요');return;}if(b.classList.contains('cf')){toast('이미 2종목에 나가요');return;}S.pick.push(x);}
+    S.pfresh=false;vPlayers();});
+  const sv=$('#psave');sv&&(sv.onclick=async()=>{
+    if(S.pick.length<ev.quota&&!await uiConfirm(`${ev.name}은(는) ${ev.quota}명인데 ${S.pick.length}명만 골랐어요.\n이대로 저장할까요? (나중에 더 넣을 수 있어요)`))return;
+    sv.disabled=true;sv.textContent='저장 중…';
+    try{const r=await post({a:'repSave',key:S.key,code:S.code,ev:ev.key,sids:S.pick});
+      if(!r.ok){sv.disabled=false;sv.textContent=ev.name+' 저장';uiAlert(r.msg);return;}
+      r.state=d.state;r.from=d.from;r.to=d.to;r.events=d.events;r.banti=d.banti;
+      S.d=r;S.pick=null;S.pfresh=true;toast('✅ 저장됨');vPlayers();}
+    catch(e){sv.disabled=false;sv.textContent=ev.name+' 저장';uiAlert('연결이 안 돼요. 다시 눌러 주세요.');}});
+}
+
 /* 시작 — 새로고침해도 같은 탭에서는 반·코드를 기억한다 */
 async function boot(resume){
   $('#main').innerHTML='<div class="loading">불러오는 중…</div>';
   try{B=await get('bantiBoot');if(!B.ok)throw new Error(B.msg);}
   catch(e){$('#main').innerHTML='<div class="loading">연결이 안 돼요. 잠시 뒤 새로고침해 주세요.</div>';return;}
   $('#yr').textContent=B.year+' 혜원 체육의 날';
-  if(resume&&S.key&&S.code){try{const r=await post({a:'bantiLogin',key:S.key,code:S.code});if(r.ok){S.d=r;vUp();return;}}catch(e){}ss.del('sdb');S.code='';}
+  if(resume&&S.key&&S.code){try{const r=await post({a:'bantiLogin',key:S.key,code:S.code});if(r.ok){S.d=r;vMain();return;}}catch(e){}ss.del('sdb');S.code='';}
   vPick();
 }
-new MutationObserver(()=>{const h=$('#htitle'),f=$('#ft');if(f.textContent!==h.textContent)f.textContent=h.textContent;}).observe($('#htitle'),{childList:true,characterData:true,subtree:true});
+new MutationObserver(()=>{const h=$('#htitle'),f=$('#ft');if(f.textContent!==h.textContent)f.textContent=h.textContent;document.title=h.textContent;}).observe($('#htitle'),{childList:true,characterData:true,subtree:true});
 boot(true);
 </script>
 </body>

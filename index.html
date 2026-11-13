@@ -1,4 +1,4 @@
-<!-- 파일명: index.html | @version 1.0.0 -->
+<!-- 파일명: index.html | @version 2.0.0 — 학생 배부용 사이트: 홈·시간표·선수 명단·점수판(대진표)·반티 모아 보기·응원 음원 추천 -->
 <!doctype html>
 <html lang="ko">
 <head>
@@ -140,22 +140,137 @@ button,input{font-family:inherit}
 .dlg .ok{background:var(--blue);color:#fff}.dlg .no{background:#eef1ee;color:var(--ink2)}
 .toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%) translateY(16px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-weight:700;font-size:14px;opacity:0;transition:all .2s ease-out;z-index:60;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* ── 2.0 더한 것 ── */
+.tabs button{font-size:11px}
+.seg{display:flex;margin:12px 16px 0;background:#e9ede9;border-radius:12px;padding:3px}
+.seg button{flex:1;height:36px;border:0;border-radius:10px;background:transparent;font-weight:800;font-size:13.5px;color:var(--muted);cursor:pointer}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.ph-h{background:#fff;padding:18px 16px 12px;border-bottom:1px solid var(--line)}
+.ph-h h1{margin:0;font-size:21px;font-weight:900;letter-spacing:-.02em}
+.ph-h p{margin:3px 0 0;font-size:12.5px;color:var(--muted)}
+.nowc{background:#fff;border:2px solid var(--danger);border-radius:14px;padding:12px 14px;display:flex;gap:11px;align-items:center}
+.nowc .tag{flex:none;font-size:11px;font-weight:800;background:var(--danger);color:#fff;border-radius:999px;padding:2px 8px}
+.nowc b{font-size:15.5px}.nowc p{margin:1px 0 0;font-size:12.5px;color:var(--muted)}
+.mini{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mini>div{background:#fff;border:1px solid var(--line);border-radius:14px;padding:11px 13px}
+.mini small{font-size:12px;color:var(--muted2);font-weight:700}
+.mini b{display:block;font-size:21px;font-weight:900;letter-spacing:-.02em;line-height:1.25}
+.mini em{font-style:normal;font-size:12px;color:var(--muted)}
+.more{display:flex;gap:8px;margin-top:8px}
+.more a,.more button{flex:1;height:46px;border-radius:12px;border:1.5px solid var(--line2);background:#fff;font-weight:800;font-size:13.5px;color:var(--ink2);display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;cursor:pointer;font-family:inherit}
+/* 시간표 */
+.tt{list-style:none;margin:12px 16px 0;padding:0}
+.tt li{display:grid;grid-template-columns:48px 1fr;gap:10px}
+.tt .tm{font-size:12.5px;font-weight:800;color:var(--muted2);padding-top:10px;text-align:right}
+.tt .bx{background:#fff;border:1px solid var(--line);border-radius:12px;padding:9px 12px;margin-bottom:6px}
+.tt .bx b{font-size:14.5px}
+.tt .bx p{margin:1px 0 0;font-size:12px;color:var(--muted)}
+.tt .done .bx{opacity:.5}
+.tt .live .bx{border:2px solid var(--danger);background:#fff6f6}
+.tt .live .tm{color:var(--danger)}
+.tt .mine .bx{background:var(--blue-t);border-color:#b9cbf5}
+.tt .mine.live .bx{border-color:var(--danger)}
+.pl{font-size:10.5px;font-weight:800;border-radius:999px;padding:1px 7px;margin-left:6px;vertical-align:1px;white-space:nowrap}
+.pl.r{background:var(--danger);color:#fff}.pl.b{background:var(--blue);color:#fff}
+/* 선수 명단 */
+.chipr{display:flex;gap:6px;overflow-x:auto;padding:12px 16px 0}
+.chipr::-webkit-scrollbar{height:0}
+.chipr button{flex:none;height:36px;padding:0 14px;border-radius:999px;border:1.5px solid var(--line2);background:#fff;font-weight:800;font-size:13.5px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.chipr button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.chipr.blue button.on{background:var(--blue);border-color:var(--blue)}
+.plist{padding:10px 16px 0;display:flex;flex-direction:column;gap:8px}
+.pc{background:#fff;border:1px solid var(--line);border-radius:14px;padding:11px 13px}
+.pc.mine{border:2px solid var(--blue)}
+.pc h3{margin:0 0 7px;font-size:15px;display:flex;justify-content:space-between;align-items:baseline}
+.pc h3 small{font-size:12px;color:var(--muted2);font-weight:700}
+.pc .nm{display:flex;flex-wrap:wrap;gap:5px}
+.pc .nm span{font-size:13px;font-weight:700;background:#f1f3f1;border-radius:8px;padding:3px 9px}
+.pc .nm span.me{background:var(--blue);color:#fff}
+.pc .nm em{font-style:normal;font-size:13px;color:var(--muted2)}
+/* 점수판 반티 칸 */
+.rk{grid-template-columns:30px 40px 1fr auto}
+.rk .sw{width:40px;height:40px;border-radius:10px;background:#f1f3f1;display:grid;place-items:center;overflow:hidden}
+.rk .sw img{width:100%;height:100%;object-fit:cover}
+.rk .sw svg{width:30px;height:30px}
+/* 반티 모아 보기 */
+.gal{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 16px 0}
+.gc{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;padding:0;cursor:pointer;text-align:left;font-family:inherit}
+.gc .im{aspect-ratio:1/1;display:grid;place-items:center;background:#f3f5f3;color:var(--muted2);font-size:12.5px;font-weight:700;overflow:hidden}
+.gc .im img{width:100%;height:100%;object-fit:cover}
+.gc .im svg{width:56%;height:56%}
+.gc .cap{padding:8px 11px;display:flex;justify-content:space-between;align-items:center}
+.gc .cap b{font-size:15px;color:var(--ink)}
+.gc .cap em{font-style:normal;font-size:11.5px;color:var(--muted2);font-weight:700}
+.gc.mine{border:2px solid var(--blue)}
+.big-ph{position:fixed;inset:0;background:rgba(10,14,12,.92);z-index:60;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:12px}
+.big-ph.show{display:flex}
+.big-ph img{max-width:100%;max-height:78vh;border-radius:14px;background:#222}
+.big-ph b{color:#fff;font-size:18px}
+.big-ph button{height:44px;padding:0 22px;border-radius:999px;border:0;background:#fff;font-weight:800;font-size:15px;cursor:pointer;font-family:inherit}
+/* 음원 */
+.sl{padding:10px 16px 0;display:flex;flex-direction:column;gap:8px}
+.sg{background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px;display:grid;grid-template-columns:96px 1fr auto;gap:11px;align-items:center}
+.sg.hl{border:2px solid var(--warn);background:var(--warn-t)}
+.sg .th{width:96px;height:54px;border-radius:9px;overflow:hidden;position:relative;display:block;background:#e9ede9}
+.sg .th img{width:100%;height:100%;object-fit:cover;display:block}
+.sg .th.no{display:grid;place-items:center;font-size:11px;font-weight:700;color:var(--muted2);text-decoration:none}
+.sg .th i{position:absolute;left:50%;top:50%;transform:translate(-40%,-50%);border-left:13px solid #fff;border-top:8px solid transparent;border-bottom:8px solid transparent;filter:drop-shadow(0 1px 2px rgba(0,0,0,.4))}
+.sg b{font-size:14px;display:block;line-height:1.3;word-break:keep-all}
+.sg p{margin:1px 0 0;font-size:12px;color:var(--muted)}
+.sg .tg{font-size:10.5px;font-weight:800;color:var(--ok);background:var(--ok-t);border-radius:5px;padding:0 5px;margin-left:4px;white-space:nowrap}
+.lk{width:50px;height:50px;border-radius:13px;border:1.5px solid var(--line2);background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--muted);cursor:pointer;font-family:inherit}
+.lk svg{width:18px;height:18px}
+.lk.on{border-color:var(--danger);background:#fff1f2;color:var(--danger)}
+.fab{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom));height:48px;padding:0 22px;border-radius:999px;background:var(--ink);color:#fff;border:0;font-weight:800;font-size:15px;box-shadow:0 8px 18px rgba(0,0,0,.22);z-index:6;cursor:pointer;font-family:inherit}
+.sheet-ov{position:fixed;inset:0;background:rgba(15,25,18,.45);z-index:40;display:none;align-items:flex-end;justify-content:center}
+.sheet-ov.show{display:flex}
+.sheet{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:520px;padding:14px 18px calc(20px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto}
+.sheet .gr{width:40px;height:4px;border-radius:4px;background:#d5dbd6;margin:0 auto 12px}
+.sheet h3{margin:0;font-size:19px;font-weight:900}
+.sheet .sub{font-size:12.5px;color:var(--muted);margin:2px 0 10px}
+.fl{display:block;font-size:12.5px;font-weight:800;color:var(--ink2);margin:10px 0 4px}
+.sheet .inp{margin-bottom:0;font-size:16px}
+.pv{margin-top:8px;display:none;grid-template-columns:104px 1fr;gap:10px;align-items:center;background:var(--ok-t);border-radius:12px;padding:8px}
+.pv.show{display:grid}
+.pv img{width:104px;height:58px;border-radius:8px;object-fit:cover;display:block}
+.pv b{font-size:13px;color:var(--ok)}.pv p{margin:0;font-size:12px;color:var(--muted)}
+.lim{text-align:center;font-size:12px;color:var(--muted2);margin-top:8px}
+.sheet .acts{display:flex;gap:8px;margin-top:14px}
+.sheet .acts button{flex:1;height:50px;border-radius:13px;border:0;font-weight:800;font-size:15.5px;cursor:pointer;font-family:inherit}
+.sheet .acts .no{background:#eef1ee;color:var(--ink2);flex:.5}
+.sheet .acts .go{background:var(--blue);color:#fff}
+.sheet .acts .go:disabled{opacity:.5}
+.empty{margin:14px 16px 0;padding:22px 16px;background:#fff;border:1px dashed var(--line2);border-radius:14px;text-align:center;color:var(--muted);font-size:13.5px;line-height:1.6}
 </style>
 </head>
 <body>
 <div class="app" id="app"><div class="loading">불러오는 중…</div></div>
 <nav class="tabs" id="tabs"><div>
-  <button data-t="home" class="on"><svg viewBox="0 0 24 24"><path d="M8 3l-5 3 2 4 2-1v12h10V9l2 1 2-4-5-3a4 4 0 01-8 0z"/></svg>우리 반</button>
-  <button data-t="bracket"><svg viewBox="0 0 24 24"><path d="M3 5h5v5H3zM3 14h5v5H3zM8 7.5h4v9H8M12 12h4M16 9.5h5v5h-5z"/></svg>대진표</button>
+  <button data-t="home" class="on"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9H3z"/></svg>홈</button>
+  <button data-t="time"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>시간표·선수</button>
   <button data-t="score"><svg viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 01-10 0z"/><path d="M7 6H4a3 3 0 003 4M17 6h3a3 3 0 01-3 4"/></svg>점수판</button>
-  <button data-t="rep"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0113 0"/><path d="M16 4a3.5 3.5 0 010 7M21.5 20a6.5 6.5 0 00-4-6"/></svg>반 대표</button>
+  <button data-t="banti"><svg viewBox="0 0 24 24"><path d="M8 3l-5 3 2 4 2-1v12h10V9l2 1 2-4-5-3a4 4 0 01-8 0z"/></svg>반티</button>
+  <button data-t="song"><svg viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg>음원</button>
 </div></nav>
 <div class="ov" id="ov"><div class="dlg" role="dialog" aria-modal="true"><p id="dlgMsg"></p><div class="acts"><button class="no" id="dlgNo">취소</button><button class="ok" id="dlgOk">확인</button></div></div></div>
+<div class="big-ph" id="bigPh"><b id="bigT"></b><img id="bigI" alt=""><button id="bigX">닫기</button></div>
+<div class="sheet-ov" id="sheet"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="shT">
+  <div class="gr"></div><h3 id="shT">노래 추천하기</h3><div class="sub">경기 사이·점심시간에 틀 노래를 추천해 주세요</div>
+  <label class="fl" for="sgUrl">유튜브 링크 <span style="color:var(--muted2);font-weight:600">(없어도 돼요)</span></label>
+  <input class="inp" id="sgUrl" inputmode="url" autocomplete="off" placeholder="유튜브 «공유 → 링크 복사» 후 붙여 넣기">
+  <div class="pv" id="sgPv"><img id="sgPvI" alt=""><div><b>✓ 영상 찾았어요</b><p>맞는 영상인지 확인해 주세요</p></div></div>
+  <label class="fl" for="sgTitle">노래 제목</label><input class="inp" id="sgTitle" maxlength="60" autocomplete="off" placeholder="예: Supernova">
+  <label class="fl" for="sgArtist">가수</label><input class="inp" id="sgArtist" maxlength="40" autocomplete="off" placeholder="예: aespa">
+  <div class="msg" id="sgMsg" style="margin:8px 0 0"></div>
+  <div class="acts"><button class="no" id="sgNo">닫기</button><button class="go" id="sgGo">추천 보내기</button></div>
+  <div class="lim" id="sgLim"></div>
+</div></div>
 <div class="toast" id="toast"></div>
 
 <script>
 const API='https://script.google.com/macros/s/AKfycbxLj-YCN1PJIQ5r4KnbaLyeCD997tRVkZoKJQ9Y-Fan75w4xx-4YJjUGsMZ-binoVeN/exec';
-const PAGE_VERSION='1.0.0', PAGE_DEPLOYED='2026-11-11 15:28';
+const PAGE_VERSION='2.0.0', PAGE_DEPLOYED='2026-11-13 22:40';
+const BANTI_URL='banti.html';
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const ls={get(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
@@ -168,27 +283,40 @@ let dlgRes=null;
 function uiDialog(m,cancel){return new Promise(r=>{$('#dlgMsg').textContent=m;$('#dlgNo').style.display=cancel?'':'none';$('#ov').classList.add('show');dlgRes=r;setTimeout(()=>$('#dlgOk').focus(),30);});}
 function dlgClose(v){$('#ov').classList.remove('show');const r=dlgRes;dlgRes=null;r&&r(v);}
 $('#dlgOk').onclick=()=>dlgClose(true);$('#dlgNo').onclick=()=>dlgClose(false);
-document.addEventListener('keydown',e=>{if(!$('#ov').classList.contains('show'))return;if(e.key==='Enter'){e.preventDefault();dlgClose(true);}if(e.key==='Escape'){e.preventDefault();dlgClose(false);}});
+document.addEventListener('keydown',e=>{
+  if($('#ov').classList.contains('show')){if(e.key==='Enter'){e.preventDefault();dlgClose(true);}if(e.key==='Escape'){e.preventDefault();dlgClose(false);}return;}
+  if(e.key==='Escape'){if($('#bigPh').classList.contains('show'))$('#bigPh').classList.remove('show');else if($('#sheet').classList.contains('show'))closeSheet();}});
 const uiAlert=m=>uiDialog(m,false), uiConfirm=m=>uiDialog(m,true);
 let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2200);}
 
-let B=null, ME=ls.get('sd_me'), TAB='home', G=ME?ME.key[0]:'1';
-const REP={key:(ls.get('sd_rep')||{}).key||'',code:'',d:null,ev:'relay',pick:null,fresh:false};
+let B=null, ME=ls.get('sd_me'), TAB=ls.get('sd_tab')||'home', G=ME?ME.key[0]:'1', SUB='time', SCO='score', PEV='relay', SGV='likes';
+let SONGS=null, PLAYERS=null, SG_FRESH='', SG_HL=0;
 const PH={};
 
 /* ───── 공통 계산 ───── */
 const EVN=k=>((B&&B.events.find(e=>e.key===k))||{name:k==='tug'?'줄다리기':k}).name;
-function dday(){const d=B&&B.cfg.eventDate;if(!d)return null;const t=new Date(d+'T00:00:00+09:00');const n=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Seoul'}));n.setHours(0,0,0,0);return Math.round((t-n)/864e5);}
 const WK='일월화수목금토';
+function kst(){const n=new Date(Date.now()+9*36e5);return {d:n.toISOString().slice(0,10),m:n.getUTCHours()*60+n.getUTCMinutes()};}
+function dday(){const d=B&&B.cfg.eventDate;if(!d)return null;return Math.round((Date.parse(d)-Date.parse(kst().d))/864e5);}
 function fmtLong(d){if(!d)return '';const t=new Date(d+'T12:00:00+09:00');return `${t.getMonth()+1}월 ${t.getDate()}일 (${WK[t.getDay()]})`;}
 /* 프로그램 줄이 내 종목인지 — «이어달리기 예선», «2인3각 달리기», «판 뒤집기» 처럼 띄어쓰기가 달라도 */
 const norm=s=>String(s).replace(/\s/g,'');
 function progFor(k){const n=norm(EVN(k));return (B.program||[]).filter(p=>norm(p.name).indexOf(n)>=0);}
 const shirt=c=>`<svg viewBox="0 0 48 48"><path d="M17 6l-10 6 4 8 4-2v24h18V18l4 2 4-8-10-6a7 7 0 01-14 0z" fill="${c}" stroke="rgba(0,0,0,.18)" stroke-width="1.2"/></svg>`;
+const hm=s=>{const m=String(s||'').match(/(\d{1,2}):(\d{2})/);return m?(+m[1])*60+(+m[2]):null;};
+function span(p){const t=String(p.time||''),a=hm(t),m=t.match(/[-~]\s*(\d{1,2}:\d{2})/);return {a,b:m?hm(m[1]):null,start:(t.match(/\d{1,2}:\d{2}/)||[''])[0]};}
+/* 행사 날이면 진행 상태 — 'done' | 'live' | '' */
+function progState(p){if(!B.cfg.eventDate)return '';const k=kst();if(k.d<B.cfg.eventDate)return '';if(k.d>B.cfg.eventDate)return 'done';
+  const s=span(p);if(s.a==null)return '';if(k.m<s.a)return '';if(s.b==null?k.m<s.a+20:k.m<s.b)return 'live';return 'done';}   // 끝 시각이 없는 순서(«13:30~»)는 20분 동안만 진행 중
+function whoTxt(w){w=(w||[]).map(x=>String(x||'').trim());if(w[0]&&!w[1]&&!w[2])return w[0];
+  if(/^\d+$/.test(w[0])&&w[0]===w[1]&&w[1]===w[2])return '학년마다 '+w[0]+'명';
+  return w.map((x,i)=>x?(i+1)+'학년 '+x+(/^\d+$/.test(x)?'명':''):'').filter(Boolean).join(' · ');}
+const myEvNames=()=>(ME&&ME.mine||[]).map(ev=>norm(EVN(ev)));
+const isMine=p=>myEvNames().some(n=>norm(p.name).indexOf(n)>=0)||(ME&&/줄다리기/.test(p.name)&&!/한마음/.test(p.name));
 
 /* 반티 사진 → 화면 색 (사진에서 가장 많이 쓰인 진한 색) */
-async function photo(fid){if(!fid)return null;if(PH[fid])return PH[fid];
-  try{const r=await get('photo',{fid});if(r.ok){PH[fid]=`data:${r.mime};base64,${r.base64}`;return PH[fid];}}catch(e){}return null;}
+async function photo(fid,size){if(!fid)return null;const k=fid+(size||'');if(PH[k])return PH[k];
+  try{const r=await get('photo',size?{fid,size}:{fid});if(r.ok){PH[k]=`data:${r.mime};base64,${r.base64}`;return PH[k];}}catch(e){}return null;}
 function teamColor(src){return new Promise(res=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=c.height=32;const x=c.getContext('2d');x.drawImage(im,0,0,32,32);
   const d=x.getImageData(0,0,32,32).data,bins={};for(let i=0;i<d.length;i+=4){const r=d[i],g=d[i+1],b=d[i+2];const mx=Math.max(r,g,b),mn=Math.min(r,g,b);if(mx-mn<40||mx<50)continue;const k=(r>>5)+','+(g>>5)+','+(b>>5);(bins[k]=bins[k]||[0,0,0,0]);bins[k][0]+=r;bins[k][1]+=g;bins[k][2]+=b;bins[k][3]++;}
   const best=Object.values(bins).sort((a,b)=>b[3]-a[3])[0];if(!best||best[3]<20){res(null);return;}
@@ -196,155 +324,217 @@ function teamColor(src){return new Promise(res=>{const im=new Image();im.onload=
   res(`rgb(${r|0},${g|0},${b|0})`);};im.onerror=()=>res(null);im.src=src;});}
 
 /* ───── 탭 ───── */
-$('#tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{TAB=b.dataset.t;draw();scrollTo(0,0);});
+$('#tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>go(b.dataset.t));
+function go(t){TAB=t;ls.set('sd_tab',t);draw();scrollTo(0,0);}
 function draw(){
+  if(!['home','time','score','banti','song'].includes(TAB))TAB='home';
   $('#tabs').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.t===TAB));
-  ({home:vHome,bracket:vBracket,score:vScore,rep:vRep})[TAB]();
+  ({home:vHome,time:vTime,score:vScore,banti:vBanti,song:vSong})[TAB]();
 }
 const footer=()=>`<div class="vf"><span id="ft">혜원 체육의 날</span> · v${PAGE_VERSION} · 배포 ${PAGE_DEPLOYED} (KST)<br>ⓒKIMJINHO</div>`;
-function setTitle(t){document.title=t;}
+const gchips=(fn)=>`<div class="chipr">${['1','2','3'].map(g=>`<button data-g="${g}" class="${G===g?'on':''}">${g}학년</button>`).join('')}</div>`;
+function bindG(fn){$('#app').querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{G=b.dataset.g;fn();});}
+const needMe=what=>`<div class="empty">${what}는 우리 학교 학생만 볼 수 있어요.<br><b>홈</b>에서 학번과 이름으로 나를 찾아 주세요.<br><button class="big blue" style="margin-top:12px" data-go="home">나를 찾으러 가기</button></div>`;
+function bindGo(){$('#app').querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));}
 
-/* ═══ 우리 반 ═══ */
+/* ═══ 홈 ═══ */
 function vLogin(msg){
-  $('#app').innerHTML=`<div class="hero" style="padding-bottom:30px"><div class="cls">${esc(B?B.year:'')} 혜원여자중학교</div><h1 id="htitle">혜원 체육의 날</h1><div class="me">${B?esc(fmtLong(B.cfg.eventDate)+' '+B.cfg.startTime+' · '+B.cfg.place):''}</div></div>
-  <div class="login"><h1>나를 찾아요</h1><p>학번과 이름을 넣으면 우리 반 반티, 내 종목, 오늘 순서를 보여 줘요.</p>
+  $('#app').innerHTML=`<div class="hero" style="padding-bottom:30px"><div class="cls">${esc(B.year)} 혜원여자중학교</div><h1 id="htitle">혜원 체육의 날</h1><div class="me">${esc(fmtLong(B.cfg.eventDate)+' '+B.cfg.startTime+' · '+B.cfg.place)}</div>
+    <div class="dd">${ddHTML()}</div></div>
+  <div class="login"><h1>나를 찾아요</h1><p>학번과 이름을 넣으면 우리 반 순서, 내 종목, 선수 명단을 보여 주고 음원도 추천할 수 있어요.</p>
   <div class="msg" id="lmsg">${esc(msg||'')}</div>
   <input class="inp num" id="sid" inputmode="numeric" maxlength="4" placeholder="학번 4자리 (예: 2105)" autocomplete="off">
   <input class="inp" id="nm" placeholder="이름" autocomplete="off">
-  <button class="big blue" id="go">들어가기</button>
-  <button class="link" id="skip">로그인 없이 점수판 보기</button></div>${footer()}`;
-  const go=async()=>{const sid=$('#sid').value.trim(),name=$('#nm').value.trim();if(!/^\d{4}$/.test(sid)||!name){$('#lmsg').textContent='학번 4자리와 이름을 넣어 주세요.';return;}
-    $('#go').disabled=true;$('#go').textContent='찾는 중…';
-    try{const r=await post({a:'me',sid,name});if(!r.ok){$('#lmsg').textContent=r.msg;$('#go').disabled=false;$('#go').textContent='들어가기';return;}
-      ME=r;ls.set('sd_me',{sid:r.sid,name:r.name,key:r.key});G=r.key[0];vHome();}
-    catch(e){$('#lmsg').textContent='연결이 안 돼요. 잠시 뒤 다시 해 주세요.';$('#go').disabled=false;$('#go').textContent='들어가기';}};
-  $('#go').onclick=go;$('#nm').onkeydown=e=>{if(e.key==='Enter')go();};$('#sid').onkeydown=e=>{if(e.key==='Enter')$('#nm').focus();};
-  $('#skip').onclick=()=>{TAB='score';draw();};
+  <button class="big blue" id="goIn">들어가기</button>
+  <p style="margin:14px 0 0;font-size:13px;text-align:center">시간표·점수판·반티는 로그인하지 않아도 볼 수 있어요.</p>
+  <div class="more"><button data-go="time">시간표</button><button data-go="score">점수판</button></div>
+  <div class="more"><a href="${BANTI_URL}">반 대표 — 반티·선수 등록 ›</a></div></div>${footer()}`;
+  bindGo();
+  const goIn=async()=>{const sid=$('#sid').value.trim(),name=$('#nm').value.trim();if(!/^\d{4}$/.test(sid)||!name){$('#lmsg').textContent='학번 4자리와 이름을 넣어 주세요.';return;}
+    $('#goIn').disabled=true;$('#goIn').textContent='찾는 중…';
+    try{const r=await post({a:'me',sid,name});if(!r.ok){$('#lmsg').textContent=r.msg;$('#goIn').disabled=false;$('#goIn').textContent='들어가기';return;}
+      ME=r;ls.set('sd_me',{sid:r.sid,name:r.name,key:r.key});G=r.key[0];SONGS=null;PLAYERS=null;vHome();}
+    catch(e){$('#lmsg').textContent='연결이 안 돼요. 잠시 뒤 다시 해 주세요.';$('#goIn').disabled=false;$('#goIn').textContent='들어가기';}};
+  $('#goIn').onclick=goIn;$('#nm').onkeydown=e=>{if(e.key==='Enter')goIn();};$('#sid').onkeydown=e=>{if(e.key==='Enter')$('#nm').focus();};
 }
+function ddHTML(){const dd=dday();return `<b class="num">${dd==null?'':dd>0?'D-'+dd:dd===0?'D-DAY':''}</b><small>${esc(fmtLong(B.cfg.eventDate))}</small>`;}
+async function checkMe(){if(!ME||ME.mine)return true;
+  try{const r=await post({a:'me',sid:ME.sid,name:ME.name});if(!r.ok){ls.del('sd_me');ME=null;return r.msg;}ME=r;}catch(e){}return true;}
 async function vHome(){
   if(!ME){vLogin();return;}
-  if(!ME.mine){ // 저장된 학번으로 다시 확인
-    try{const r=await post({a:'me',sid:ME.sid,name:ME.name});if(!r.ok){ls.del('sd_me');ME=null;vLogin(r.msg);return;}ME=r;}catch(e){}
-  }
-  const k=ME.key,bt=(B.banti||{})[k]||{},dd=dday();
+  const ck=await checkMe();if(ck!==true){vLogin(ck);return;}
+  if(TAB!=='home')return;
+  const k=ME.key,bt=(B.banti||{})[k]||{};
   const mine=ME.mine||[];
-  const evCards=mine.length?mine.map(ev=>{const ps=progFor(ev);const t=ps[0]?ps[0].time.split('-')[0]:'';
-    return `<div class="ev"><div class="t num">${esc(t)||'–'}<small>${ps.length>1?'예선·결승':'시작'}</small></div><div><b>${esc(EVN(ev))}</b><p>${ps.map(p=>esc(p.name)+' '+esc(p.time)).join(' · ')||'시간은 프로그램표를 봐 주세요'}</p></div></div>`;}).join('')
+  const evCards=mine.length?mine.map(ev=>{const ps=progFor(ev);const t=ps[0]?span(ps[0]).start:'';
+    return `<div class="ev"><div class="t num">${esc(t)||'–'}<small>${ps.length>1?'예선·결승':'시작'}</small></div><div><b>${esc(EVN(ev))}</b><p>${ps.map(p=>esc(p.name)+' '+esc(p.time)).join(' · ')||'시간은 시간표를 봐 주세요'}</p></div></div>`;}).join('')
     :`<div class="none">아직 등록된 종목이 없어요. 반 대표가 선수 등록을 마치면 여기에 나와요.<br><b>학생 1명은 최소 1종목, 최대 2종목</b>에 나가요.</div>`;
-  const mineNames=mine.map(ev=>norm(EVN(ev)));
-  const tl=(B.program||[]).map(p=>{const me=mineNames.some(n=>norm(p.name).indexOf(n)>=0);
-    return `<li class="${me?'me':''}"><span class="tm num">${esc(p.time.split('-')[0])}</span><b>${esc(p.name)}</b>${me?'<span class="pill">출전</span>':''}</li>`;}).join('');
+  const P=B.program||[],live=P.find(p=>progState(p)==='live'),next=P.find(p=>progState(p)===''&&(kst().d===B.cfg.eventDate));
+  const myNext=P.find(p=>isMine(p)&&progState(p)!=='done');
+  const sr=(B.scores.rows||{})[k];
   $('#app').innerHTML=`<div class="hero"><div class="cls">${esc(B.year)} 혜원 체육의 날</div><h1 id="htitle">${esc(k)}</h1><div class="me">${esc(ME.sid)} ${esc(ME.name)}${ME.supporter?' · 서포터즈':''}</div>
-    <div class="dd"><b class="num">${dd==null?'':dd>0?'D-'+dd:dd===0?'D-DAY':''}</b><small>${esc(fmtLong(B.cfg.eventDate))}</small></div>
+    <div class="dd">${ddHTML()}</div>
     <div class="tee" id="tee">${bt.fid?'':shirt('#dfe5df')}</div></div>
-    <div class="body"><div class="sec"><h2>내 종목</h2><div class="mine">${evCards}</div></div>
-    <div class="sec"><h2>오늘 순서 <small style="font-weight:600;color:var(--muted2);font-size:12.5px">${esc(B.cfg.place)} · ${esc(B.cfg.startTime)} 시작</small></h2><ul class="tl">${tl||'<li>프로그램이 아직 없어요</li>'}</ul></div>
+    <div class="body">
+    ${live?`<div class="sec"><h2>지금 하는 경기</h2><div class="nowc"><span class="tag">진행 중</span><div><b>${esc(live.name)}</b><p>${esc(live.time)} · ${esc(whoTxt(live.who))}</p></div></div></div>`:''}
+    <div class="sec"><h2>우리 반</h2><div class="mini">
+      <div><small>학년 순위</small><b class="num">${B.scores.started&&sr&&sr.rank?esc(sr.rank)+'위':'경기 전'}</b><em>${B.scores.started&&sr?sr.total+'점':'당일 점수가 올라와요'}</em></div>
+      <div><small>${myNext?'우리 다음 순서':next?'다음 순서':'시작'}</small><b class="num">${esc(myNext?span(myNext).start:next?span(next).start:B.cfg.startTime)}</b><em>${esc(myNext?myNext.name:next?next.name:B.cfg.place)}</em></div></div></div>
+    <div class="sec"><h2>내 종목</h2><div class="mine">${evCards}</div></div>
+    <div class="sec"><div class="more"><button data-go="time" id="toPl">우리 반 선수 명단 ›</button><button data-go="song">응원 음원 추천 ›</button></div>
+      <div class="more"><a href="${BANTI_URL}">반 대표 — 반티·선수 등록 ›</a></div></div>
     <div class="sec"><div class="card" style="font-size:13.5px;color:var(--muted)">담임 ${esc(bt.teacher||'')} 선생님 · 내가 아니면 <button class="link" id="out" style="display:inline;margin:0">다시 찾기</button></div></div></div>${footer()}`;
-  $('#out').onclick=()=>{ls.del('sd_me');ME=null;vLogin();};
+  bindGo();$('#toPl').onclick=()=>{SUB='players';G=k[0];go('time');};
+  $('#out').onclick=()=>{ls.del('sd_me');ME=null;SONGS=null;PLAYERS=null;vLogin();};
   if(bt.fid){const src=await photo(bt.fid);if(src&&$('#tee')){$('#tee').innerHTML=`<img alt="${esc(k)} 반티" src="${src}">`;
     const c=await teamColor(src);if(c)document.documentElement.style.setProperty('--team',c);}}
 }
 
-/* ═══ 대진표 ═══ */
-function gpal(){return `<div class="gpal">${['1','2','3'].map(g=>`<button data-g="${g}" class="${G===g?'on':''}">${g}학년</button>`).join('')}</div>`;}
-function bindG(fn){$('#app').querySelectorAll('.gpal button').forEach(b=>b.onclick=()=>{G=b.dataset.g;fn();});}
-function vBracket(){
-  const my=ME?ME.key:'';
-  const h=Object.keys(B.bracket).map(k=>{const b=B.bracket[k],x=b.grades[G];const has=x.order.some(o=>o);
-    return `<div class="bk card"><h3>${esc(b.name)}</h3>${has?`<div class="order">${x.order.map(o=>`<span class="${o?(o===my?'me':''):'e'}">${esc(o||'?')}</span>`).join('')}</div><div class="games">${x.games.map(esc).join(' · ')}</div>`:'<div class="games">아직 추첨 전이에요</div>'}</div>`;}).join('');
-  $('#app').innerHTML=`<div class="sb-h"><h1 id="htitle">대진표</h1><small>추첨 순서(왼쪽부터) · 우리 반은 파란색</small></div>${gpal()}${h}
-  <div class="note">이어달리기는 예선 2경기 뒤 결승, 판뒤집기는 3판 2선승 토너먼트, 줄다리기는 학년별 토너먼트예요.</div>${footer()}`;
-  bindG(vBracket);
+/* ═══ 시간표 · 선수 명단 ═══ */
+function vTime(){
+  const head=`<div class="ph-h"><h1 id="htitle">${SUB==='time'?'오늘 시간표':'종목별 선수 명단'}</h1><p>${SUB==='time'?esc(fmtLong(B.cfg.eventDate)+' · '+B.cfg.place+' · '+B.cfg.startTime+' 시작')+' · 전교생 같은 순서':'반 대표가 등록한 선수 · 우리 반은 파란 테두리'}</p></div>
+    <div class="seg"><button data-s="time" class="${SUB==='time'?'on':''}">시간표</button><button data-s="players" class="${SUB==='players'?'on':''}">선수 명단</button></div>`;
+  const bindS=()=>$('#app').querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{SUB=b.dataset.s;vTime();});
+  if(SUB==='time'){
+    const li=(B.program||[]).map(p=>{const st=progState(p),me=ME&&isMine(p);
+      return `<li class="${st} ${me?'mine':''}"><div class="tm num">${esc(span(p).start)}</div><div class="bx"><b>${esc(p.name)}${st==='live'?'<span class="pl r">진행 중</span>':''}${me&&ME.mine&&myEvNames().some(n=>norm(p.name).indexOf(n)>=0)?'<span class="pl b">내 종목</span>':''}</b><p>${esc(p.time)}${whoTxt(p.who)?' · '+esc(whoTxt(p.who)):''}</p></div></li>`;}).join('');
+    $('#app').innerHTML=head+`<ul class="tt">${li||'<li><div></div><div class="bx">시간표가 아직 없어요</div></li>'}</ul>
+      ${B.cfg.eventDate&&kst().d===B.cfg.eventDate?'<div class="note">지난 순서는 흐리게, 지금 순서는 빨간 테두리로 보여요. 진행에 따라 조금씩 달라질 수 있어요.</div>':''}${footer()}`;
+    bindS();return;
+  }
+  if(!ME){$('#app').innerHTML=head+needMe('선수 명단')+footer();bindS();bindGo();return;}
+  if(!PLAYERS){$('#app').innerHTML=head+'<div class="loading">선수 명단 불러오는 중…</div>'+footer();bindS();
+    post({a:'players',sid:ME.sid,name:ME.name}).then(r=>{if(!r.ok){uiAlert(r.msg);return;}PLAYERS=r.players;if(TAB==='time'&&SUB==='players')vTime();}).catch(()=>toast('연결이 안 돼요'));return;}
+  const ev=B.events.find(e=>e.key===PEV)||B.events[0];
+  const cards=[1,2,3,4,5].map(n=>{const k=G+'-'+n,ns=((PLAYERS[k]||{})[ev.key])||[];
+    return `<div class="pc ${ME.key===k?'mine':''}"><h3>${esc(k)}${ME.key===k?' <span class="pl b">우리 반</span>':''}<small class="num">${ns.length}/${ev.quota}명</small></h3>
+      <div class="nm">${ns.length?ns.map(x=>`<span class="${ME.key===k&&x===ME.name?'me':''}">${esc(x)}</span>`).join(''):'<em>아직 등록 전이에요</em>'}</div></div>`;}).join('');
+  $('#app').innerHTML=head+`<div class="chipr blue">${B.events.map(e=>`<button data-e="${e.key}" class="${e.key===ev.key?'on':''}">${esc(e.name)}</button>`).join('')}</div>${gchips()}
+    <div class="plist">${cards}</div><div class="note">줄다리기는 반 전체가 나가요. 명단이 바뀌면 새로 열 때 반영돼요.</div>${footer()}`;
+  bindS();bindG(vTime);
+  $('#app').querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{PEV=b.dataset.e;vTime();});
 }
 
-/* ═══ 점수판 ═══ */
-let poll=null;
-async function refresh(){try{const r=await get('boot');if(r.ok){B=r;if(TAB==='score')vScore();}}catch(e){}}
+/* ═══ 점수판 · 대진표 ═══ */
+async function refresh(){try{const r=await get('boot');if(r.ok){B=r;if(TAB==='score'&&SCO==='score')vScore();}}catch(e){}}
 function vScore(){
-  const S=B.scores.rows,my=ME?ME.key:'';
+  const seg=`<div class="seg" style="margin:0;border-radius:0;padding:6px 16px 8px;background:#121a15"><button data-c="score" class="${SCO==='score'?'on':''}" style="${SCO==='score'?'':'color:#a9b4ac'}">점수</button><button data-c="bracket" class="${SCO==='bracket'?'on':''}" style="${SCO==='bracket'?'':'color:#a9b4ac'}">대진표</button></div>`;
+  const bindC=()=>$('#app').querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{SCO=b.dataset.c;vScore();});
+  const my=ME?ME.key:'';
+  if(SCO==='bracket'){
+    const h=Object.keys(B.bracket).map(k=>{const b=B.bracket[k],x=b.grades[G];const has=x.order.some(o=>o);
+      return `<div class="bk card"><h3>${esc(b.name)}</h3>${has?`<div class="order">${x.order.map(o=>`<span class="${o?(o===my?'me':''):'e'}">${esc(o||'?')}</span>`).join('')}</div><div class="games">${x.games.map(esc).join(' · ')}</div>`:'<div class="games">아직 추첨 전이에요</div>'}</div>`;}).join('');
+    $('#app').innerHTML=`<div class="sb-h"><h1 id="htitle">대진표</h1><small>추첨 순서(왼쪽부터) · 우리 반은 파란색</small></div>${seg}${gchips()}${h}
+    <div class="note">이어달리기는 예선 2경기 뒤 결승, 판뒤집기는 3판 2선승 토너먼트, 줄다리기는 학년별 토너먼트예요.</div>${footer()}`;
+    bindC();bindG(vScore);return;
+  }
+  const S=B.scores.rows;
   const rows=[1,2,3,4,5].map(n=>({k:G+'-'+n,...(S[G+'-'+n]||{total:0,rank:'',ranks:{},pts:{}})})).sort((a,b)=>b.total-a.total||a.k.localeCompare(b.k));
   const mx=Math.max(1,...rows.map(r=>r.total));
   const RK=[['flip','판뒤집기'],['rope','단체줄넘기'],['leg','2인3각'],['tug','줄다리기'],['relay','이어달리기']];
-  $('#app').innerHTML=`<div class="sb-h"><h1 id="htitle">${esc(B.year)} 실시간 점수판</h1><small>학년 안 순위 · ${esc(B.at.slice(11,16))} 기준</small>${B.scores.started?'<div class="live"><i></i>LIVE</div>':''}</div>${gpal()}
-  ${B.scores.started?`<div class="rank">${rows.map(r=>`<div class="rk ${r.rank==='1'?'first':''} ${r.k===my?'mine':''}"><div class="n num">${esc(r.rank||'-')}</div>
-    <div><b>${esc(r.k)}${r.k===my?' <small style="font-size:11.5px;color:var(--blue)">우리 반</small>':''}</b><div class="bar"><i style="width:${r.total/mx*100}%"></i></div>
+  const sw=k=>{const f=B.cfg.bantiShow&&(B.banti[k]||{}).fid;return `<div class="sw" ${f?`data-fid="${esc(f)}"`:''}>${shirt(k===my?'var(--blue)':'#dfe5df')}</div>`;};
+  $('#app').innerHTML=`<div class="sb-h"><h1 id="htitle">${esc(B.year)} 실시간 점수판</h1><small>학년 안 순위 · ${esc(B.at.slice(11,16))} 기준</small>${B.scores.started?'<div class="live"><i></i>LIVE</div>':''}</div>${seg}${gchips()}
+  ${B.scores.started?`<div class="rank">${rows.map(r=>`<div class="rk ${r.rank==='1'?'first':''} ${r.k===my?'mine':''}"><div class="n num">${esc(r.rank||'-')}</div>${sw(r.k)}
+    <div><b>${esc(r.k)}${r.k===my?' <span class="pl b">우리 반</span>':''}</b><div class="bar"><i style="width:${r.total/mx*100}%"></i></div>
     <div class="chips">${RK.filter(x=>r.ranks[x[0]]).map(x=>`<span class="${r.ranks[x[0]]==='1'?'w':''}">${x[1]} ${r.ranks[x[0]]}위</span>`).join('')}</div></div>
     <div class="pt num">${r.total}<small>점</small></div></div>`).join('')}</div>`
   :`<div class="note">아직 경기 전이에요. 당일 경기가 끝날 때마다 점수가 여기에 올라와요.<br><br>배점 — 판뒤집기·단체줄넘기·2인3각: 1위 200~220 · 2위 150 · 3위 이하 100<br>줄다리기·이어달리기: 1위 300 · 2위 200 · 3위 이하 100</div>`}${footer()}`;
-  bindG(vScore);
+  bindC();bindG(vScore);
+  $('#app').querySelectorAll('.sw[data-fid]').forEach(async el=>{const s=await photo(el.dataset.fid);if(s&&el.isConnected)el.innerHTML=`<img alt="" src="${s}">`;});
 }
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&TAB==='score')refresh();});
-setInterval(()=>{if(!document.hidden&&TAB==='score'&&B&&B.scores.started)refresh();},30000);
+setInterval(()=>{if(!document.hidden&&TAB==='score'&&SCO==='score'&&B&&B.scores.started)refresh();},30000);
 
-/* ═══ 반 대표 ═══ */
-function vRep(){
-  if(!REP.d){
-    $('#app').innerHTML=`<div class="rp-h"><h1 id="htitle">반 대표</h1><p>체육도서부장·반장만 — 선생님께 받은 반 대표 코드로 들어와요.</p></div>
-    <div class="login" style="padding-top:18px"><div class="cpal">${['3','2','1'].flatMap(g=>[1,2,3,4,5].map(n=>`<button data-k="${g}-${n}" class="${REP.key===g+'-'+n?'on':''}">${g}-${n}</button>`)).join('')}</div>
-    <div class="msg" id="rmsg"></div><input class="inp num" id="code" inputmode="numeric" maxlength="6" placeholder="반 대표 코드" autocomplete="off">
-    <button class="big blue" id="rgo">들어가기</button></div>${footer()}`;
-    $('#app').querySelectorAll('.cpal button').forEach(b=>b.onclick=()=>{REP.key=b.dataset.k;$('#app').querySelectorAll('.cpal button').forEach(x=>x.classList.toggle('on',x===b));});
-    const go=async()=>{if(!REP.key){$('#rmsg').textContent='우리 반을 먼저 눌러 주세요.';return;}const code=$('#code').value.trim();if(!code){$('#rmsg').textContent='코드를 넣어 주세요.';return;}
-      $('#rgo').disabled=true;try{const r=await post({a:'repLogin',key:REP.key,code});if(!r.ok){$('#rmsg').textContent=r.msg;$('#rgo').disabled=false;return;}
-        REP.code=code;REP.d=r;REP.pick=null;ls.set('sd_rep',{key:REP.key});vRep();}catch(e){$('#rmsg').textContent='연결이 안 돼요.';$('#rgo').disabled=false;}};
-    $('#rgo').onclick=go;$('#code').onkeydown=e=>{if(e.key==='Enter')go();};
-    return;
-  }
-  const d=REP.d,isB=REP.ev==='banti';
-  const ev=B.events.find(e=>e.key===REP.ev);
-  const pal=`<div class="evpal"><button data-e="banti" class="${isB?'on':''}">반티 사진<em>${d.banti.fid?'✓':''}</em></button>${B.events.map(e=>`<button data-e="${e.key}" class="${REP.ev===e.key?'on':''}">${e.name}<em>${(d.players[e.key]||[]).length}/${e.quota}</em></button>`).join('')}</div>`;
-  const head=`<div class="rp-h"><h1 id="htitle">${esc(d.key)} 반 대표</h1><p>${isB?'반에서 정한 반티 사진 1장을 올려요.':'종목을 고르고 나갈 친구를 눌러요. 다 고르면 저장!'}</p></div>`;
-  if(isB){
-    $('#app').innerHTML=head+pal+`<div class="bantiBox"><div class="ph" id="bph">${d.banti.fid?'불러오는 중…':'아직 안 올렸어요'}</div>
-      ${d.bantiOpen?`<label class="big blue" style="line-height:52px">${d.banti.fid?'사진 바꾸기':'사진 올리기'}<input type="file" accept="image/*" id="bf"></label>`:'<div class="rule" style="margin:0">반티 올리기가 마감되었어요.</div>'}
-      <div class="savedat ${REP.freshB?'ok':''}">${d.banti.time?(REP.freshB?'✅ 저장됨 · ':'마지막 저장 · ')+esc(d.banti.time):''}</div></div>
-      <button class="link" id="rout">다른 반으로</button>${footer()}`;
-    if(d.banti.fid)photo(d.banti.fid).then(s=>{if(s&&$('#bph'))$('#bph').innerHTML=`<img alt="반티" src="${s}">`;});
-    const bf=$('#bf');bf&&(bf.onchange=()=>upBanti(bf.files[0]));
-  }else{
-    if(REP.pick===null)REP.pick=(d.players[ev.key]||[]).slice();
-    const other={};B.events.forEach(e=>{if(e.key!==ev.key)(d.players[e.key]||[]).forEach(s=>(other[s]=other[s]||[]).push(e.key));});
-    const partner={relay:'leg',leg:'relay',flip:'rope',rope:'flip'}[ev.key];
-    const nm={};d.roster.forEach(s=>nm[s.sid]=s.name);
-    const left=ev.quota-REP.pick.length;
-    $('#app').innerHTML=head+pal+`<div class="need"><span>${esc(ev.name)} <b class="num">${REP.pick.length}/${ev.quota}</b></span>${left===0?'<span class="ok">다 골랐어요</span>':`<span>${left}명 더</span>`}</div>
-    <div class="picked">${REP.pick.map(s=>`<span>${esc(nm[s]||s)}</span>`).join('')||'<em>아래에서 친구를 눌러요</em>'}</div>
-    ${d.roster.length?`<div class="roster">${d.roster.map(s=>{const on=REP.pick.includes(s.sid),o=other[s.sid]||[];const no=!on&&o.includes(partner),cf=!on&&!no&&o.length>=2;
-      return `<button data-s="${s.sid}" class="${on?'on':no?'no':cf?'cf':''}" ${no?'disabled':''}>${esc(s.name)}<small>${s.sid.slice(2)}번${o.length?' · '+o.map(EVN).join('·'):''}</small></button>`}).join('')}</div>`:'<div class="note">아직 우리 반 명단이 없어요. 체육 선생님께 말씀드려 주세요.</div>'}
-    <div class="rule">한 사람은 최소 1종목, 최대 2종목! 이어달리기·2인3각 중 하나, 판뒤집기·단체줄넘기 중 하나만 나갈 수 있어요. 줄 그은 친구는 «${esc(EVN(partner))}»에 이미 들어가 있어요.</div>
-    ${d.repOpen?`<button class="big save" id="rsave">${esc(ev.name)} 저장</button>`:'<div class="rule">선수 등록이 마감되었어요.</div>'}
-    <div class="savedat ${REP.fresh?'ok':''}">${d.savedAt?(REP.fresh?'✅ 저장됨 · ':'마지막 저장 · ')+esc(d.savedAt):''}</div>
-    <button class="link" id="rout">다른 반으로</button>${footer()}`;
-    $('#app').querySelectorAll('.roster button').forEach(b=>b.onclick=()=>{const x=b.dataset.s;
-      if(REP.pick.includes(x))REP.pick=REP.pick.filter(y=>y!==x);
-      else{if(REP.pick.length>=ev.quota){toast(ev.name+'은(는) '+ev.quota+'명까지예요');return;}if(b.classList.contains('cf')){toast('이미 2종목에 나가요');return;}REP.pick.push(x);}
-      REP.fresh=false;vRep();});
-    const sv=$('#rsave');sv&&(sv.onclick=async()=>{
-      if(REP.pick.length<ev.quota&&!await uiConfirm(`${ev.name}은(는) ${ev.quota}명인데 ${REP.pick.length}명만 골랐어요.\n이대로 저장할까요? (나중에 더 넣을 수 있어요)`))return;
-      sv.disabled=true;sv.textContent='저장 중…';
-      try{const r=await post({a:'repSave',key:d.key,code:REP.code,ev:ev.key,sids:REP.pick});if(!r.ok){sv.disabled=false;sv.textContent=ev.name+' 저장';uiAlert(r.msg);return;}
-        REP.d=r;REP.pick=null;REP.fresh=true;toast('✅ 저장됨');vRep();}catch(e){sv.disabled=false;sv.textContent=ev.name+' 저장';uiAlert('연결이 안 돼요. 다시 눌러 주세요.');}});
-  }
-  $('#app').querySelectorAll('.evpal button').forEach(b=>b.onclick=()=>{REP.ev=b.dataset.e;REP.pick=null;REP.fresh=false;REP.freshB=false;vRep();});
-  $('#rout').onclick=()=>{REP.d=null;REP.code='';vRep();};
+/* ═══ 반티 모아 보기 ═══ */
+function vBanti(){
+  const head=`<div class="ph-h"><h1 id="htitle">우리 학교 반티</h1><p>반 대표가 올린 반티 · 누르면 크게 보여요</p></div>`;
+  if(!B.cfg.bantiShow){$('#app').innerHTML=head+`<div class="empty">반티는 선생님이 공개하면 여기에서 모두 볼 수 있어요.<br>반 대표는 아래에서 우리 반 반티를 올려요.<br><a class="big blue" style="display:grid;place-items:center;margin-top:12px;text-decoration:none" href="${BANTI_URL}">반 대표 — 반티 올리기</a></div>${footer()}`;return;}
+  const my=ME?ME.key:'';
+  $('#app').innerHTML=head+gchips()+`<div class="gal">${[1,2,3,4,5].map(n=>{const k=G+'-'+n,b=B.banti[k]||{};
+    return `<button class="gc ${k===my?'mine':''}" data-k="${k}" ${b.fid?'':'disabled'}><div class="im" ${b.fid?`data-fid="${esc(b.fid)}"`:''}>${b.fid?'불러오는 중…':'아직 안 올렸어요'}</div>
+      <div class="cap"><b>${esc(k)}</b><em style="${k===my?'color:var(--blue)':''}">${k===my?'우리 반':esc(b.teacher?b.teacher+' T':'')}</em></div></button>`;}).join('')}</div>${footer()}`;
+  bindG(vBanti);
+  $('#app').querySelectorAll('.im[data-fid]').forEach(async el=>{const s=await photo(el.dataset.fid);if(el.isConnected)el.innerHTML=s?`<img alt="" src="${s}">`:shirt('#dfe5df');});
+  $('#app').querySelectorAll('.gc[data-k]').forEach(b=>b.onclick=async()=>{const k=b.dataset.k,f=(B.banti[k]||{}).fid;if(!f)return;
+    $('#bigT').textContent=k+' 반티';$('#bigI').src=PH[f]||'';$('#bigPh').classList.add('show');const s=await photo(f,'w1000');if(s&&$('#bigPh').classList.contains('show'))$('#bigI').src=s;});
 }
-function shrink(file,max=1400){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.86).split(',')[1]);};im.onerror=()=>rej(new Error('사진을 읽지 못했어요.'));im.src=fr.result;};fr.readAsDataURL(file);});}
-async function upBanti(f){if(!f)return;
-  if(REP.d.banti.fid&&!await uiConfirm('지금 반티 사진을 새 사진으로 바꿀까요?'))return;
-  toast('올리는 중…');
-  try{const b64=await shrink(f);const r=await post({a:'repBanti',key:REP.d.key,code:REP.code,b64,mime:'image/jpeg'});
-    if(!r.ok){uiAlert(r.msg);return;}PH[r.fid]='data:image/jpeg;base64,'+b64;REP.d.banti={fid:r.fid,time:r.savedAt};REP.freshB=true;
-    if(B.banti[REP.d.key])B.banti[REP.d.key].fid=r.fid;toast('✅ 저장됨');vRep();}
-  catch(e){uiAlert('올리지 못했어요. 다시 해 주세요.');}}
+$('#bigX').onclick=()=>$('#bigPh').classList.remove('show');
+$('#bigPh').onclick=e=>{if(e.target.id==='bigPh')$('#bigPh').classList.remove('show');};
+
+/* ═══ 응원 음원 ═══ */
+const heart=on=>`<svg viewBox="0 0 24 24" fill="${on?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M12 21s-8-5-8-11a5 5 0 019-3 5 5 0 019 3c0 6-8 11-8 11z"/></svg>`;
+const ytId=u=>{u=String(u||'').trim();if(!u)return '';const m=u.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([\w-]{11})/)||u.match(/^([\w-]{11})$/);return m?m[1]:null;};
+async function loadSongs(){const r=await get('songs',ME?{sid:ME.sid}:null);if(!r.ok)throw new Error(r.msg);SONGS=r;}
+async function vSong(){
+  const head=`<div class="ph-h"><h1 id="htitle">응원 음원 추천</h1><p>경기 사이·점심시간에 틀 노래 · 하트가 많은 곡부터 틀어요</p></div>`;
+  if(!SONGS){$('#app').innerHTML=head+'<div class="loading">불러오는 중…</div>'+footer();
+    try{await loadSongs();}catch(e){if(TAB==='song')$('#app').innerHTML=head+'<div class="empty">연결이 안 돼요. 잠시 뒤 다시 열어 주세요.</div>'+footer();return;}
+    if(TAB!=='song')return;}
+  let L=SONGS.songs.slice();
+  if(SGV==='likes')L.sort((a,b)=>b.likes-a.likes||b.id-a.id);else L.sort((a,b)=>b.id-a.id);
+  if(SGV==='mine')L=L.filter(x=>x.mine);
+  const left=Math.max(0,SONGS.dayMax-SONGS.usedToday);
+  $('#app').innerHTML=head+`<div class="seg"><button data-v="likes" class="${SGV==='likes'?'on':''}">인기순</button><button data-v="new" class="${SGV==='new'?'on':''}">최신순</button><button data-v="mine" class="${SGV==='mine'?'on':''}">내 추천</button></div>
+    ${SG_FRESH?`<div class="savedat ok" style="margin:8px 0 0">✅ 추천했어요 · ${esc(SG_FRESH)}</div>`:''}
+    ${!SONGS.open?'<div class="rule">지금은 추천을 받지 않아요. 하트는 누를 수 있어요.</div>':''}
+    <div class="sl">${L.map(x=>`<div class="sg ${x.id===SG_HL?'hl':''}" id="sg${x.id}">
+      ${x.vid?`<a class="th" href="https://www.youtube.com/watch?v=${esc(x.vid)}" target="_blank" rel="noopener" aria-label="${esc(x.title)} 유튜브로 듣기"><img alt="" loading="lazy" src="https://i.ytimg.com/vi/${esc(x.vid)}/mqdefault.jpg"><i></i></a>`
+        :`<a class="th no" href="https://www.youtube.com/results?search_query=${encodeURIComponent(x.title+' '+x.artist)}" target="_blank" rel="noopener">유튜브에서<br>찾기</a>`}
+      <div><b>${esc(x.title)}${x.played?'<span class="tg">틀었어요</span>':''}</b><p>${esc(x.artist)}${x.artist?' · ':''}${esc(x.key)} 추천${x.mine?' · 내 추천':''}</p></div>
+      <button class="lk ${x.liked?'on':''}" data-id="${x.id}" aria-label="하트 ${x.likes}">${heart(x.liked)}<span class="num">${x.likes}</span></button></div>`).join('')
+      ||`<div class="empty" style="margin:0">${SGV==='mine'?'아직 내가 추천한 곡이 없어요.':'아직 추천된 곡이 없어요. 첫 곡을 추천해 주세요!'}</div>`}</div>
+    <div style="height:70px"></div>${footer()}
+    ${SONGS.open?`<button class="fab" id="fab">＋ 추천하기${ME?` <small style="opacity:.75;font-weight:700">· 오늘 ${left}곡 남음</small>`:''}</button>`:''}`;
+  $('#app').querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{SGV=b.dataset.v;SG_HL=0;vSong();});
+  $('#app').querySelectorAll('.lk').forEach(b=>b.onclick=()=>like(+b.dataset.id,b));
+  const f=$('#fab');f&&(f.onclick=openSheet);
+  if(SG_HL){const el=$('#sg'+SG_HL);el&&el.scrollIntoView({block:'center',behavior:'smooth'});}
+}
+async function like(id,btn){
+  if(!ME){if(await uiConfirm('하트는 우리 학교 학생만 누를 수 있어요.\n홈에서 나를 먼저 찾을까요?'))go('home');return;}
+  const x=SONGS.songs.find(y=>y.id===id);if(!x)return;
+  x.liked=!x.liked;x.likes+=x.liked?1:-1;btn.classList.toggle('on',x.liked);btn.innerHTML=heart(x.liked)+`<span class="num">${x.likes}</span>`;btn.disabled=true;
+  try{const r=await post({a:'songLike',sid:ME.sid,name:ME.name,id});btn.disabled=false;
+    if(!r.ok){x.liked=!x.liked;x.likes+=x.liked?1:-1;btn.classList.toggle('on',x.liked);btn.innerHTML=heart(x.liked)+`<span class="num">${x.likes}</span>`;uiAlert(r.msg);return;}
+    x.likes=r.likes;x.liked=r.liked;btn.innerHTML=heart(x.liked)+`<span class="num">${x.likes}</span>`;}
+  catch(e){btn.disabled=false;x.liked=!x.liked;x.likes+=x.liked?1:-1;btn.classList.toggle('on',x.liked);btn.innerHTML=heart(x.liked)+`<span class="num">${x.likes}</span>`;toast('연결이 안 돼요');}
+}
+async function openSheet(){
+  if(!ME){if(await uiConfirm('추천은 우리 학교 학생만 할 수 있어요.\n홈에서 나를 먼저 찾을까요?'))go('home');return;}
+  const left=Math.max(0,SONGS.dayMax-SONGS.usedToday);
+  if(!left){uiAlert(`오늘은 ${SONGS.dayMax}곡을 다 추천했어요. 내일 또 추천해 주세요!\n마음에 드는 곡에 하트를 눌러 주세요.`);return;}
+  ['#sgUrl','#sgTitle','#sgArtist'].forEach(s=>$(s).value='');$('#sgMsg').textContent='';$('#sgPv').classList.remove('show');
+  $('#sgLim').textContent=`오늘 ${SONGS.dayMax}곡 중 ${left}곡 남았어요 · 학교에 맞지 않는 곡은 선생님이 숨길 수 있어요`;
+  $('#sgGo').disabled=false;$('#sgGo').textContent='추천 보내기';
+  $('#sheet').classList.add('show');setTimeout(()=>$('#sgUrl').focus(),60);
+}
+function closeSheet(){$('#sheet').classList.remove('show');}
+$('#sgNo').onclick=closeSheet;
+$('#sheet').onclick=e=>{if(e.target.id==='sheet')closeSheet();};
+$('#sgUrl').oninput=()=>{const v=ytId($('#sgUrl').value);$('#sgMsg').textContent=v===null?'유튜브 주소가 아닌 것 같아요.':'';
+  if(v){$('#sgPvI').src=`https://i.ytimg.com/vi/${v}/mqdefault.jpg`;$('#sgPv').classList.add('show');}else $('#sgPv').classList.remove('show');};
+$('#sgGo').onclick=async()=>{
+  const url=$('#sgUrl').value.trim(),title=$('#sgTitle').value.trim(),artist=$('#sgArtist').value.trim();
+  if(ytId(url)===null){$('#sgMsg').textContent='유튜브 주소가 아닌 것 같아요. 비워 둬도 돼요.';return;}
+  if(!title){$('#sgMsg').textContent='노래 제목을 넣어 주세요.';$('#sgTitle').focus();return;}
+  $('#sgGo').disabled=true;$('#sgGo').textContent='보내는 중…';
+  try{const r=await post({a:'songAdd',sid:ME.sid,name:ME.name,url,title,artist});
+    if(!r.ok){$('#sgGo').disabled=false;$('#sgGo').textContent='추천 보내기';$('#sgMsg').textContent=r.msg;
+      if(r.dupId){closeSheet();SG_HL=r.dupId;SGV='likes';toast('이미 있는 곡이에요 — 하트를 눌러 주세요');vSong();}return;}
+    SONGS=r;SG_FRESH=r.savedAt;SG_HL=r.added;SGV='new';closeSheet();toast('✅ 추천했어요');vSong();}
+  catch(e){$('#sgGo').disabled=false;$('#sgGo').textContent='추천 보내기';$('#sgMsg').textContent='연결이 안 돼요. 다시 눌러 주세요.';}
+};
 
 /* 바닥글 제목은 머리 제목을 따라간다 */
-new MutationObserver(()=>{const h=$('#htitle'),f=$('#ft');if(h&&f&&f.textContent!==h.textContent)f.textContent=h.textContent;}).observe($('#app'),{childList:true,subtree:true,characterData:true});
+new MutationObserver(()=>{const h=$('#htitle'),f=$('#ft');if(h&&f&&f.textContent!==h.textContent)f.textContent=h.textContent;document.title=(h?h.textContent+' · ':'')+'혜원 체육의 날';}).observe($('#app'),{childList:true,subtree:true,characterData:true});
 
 /* ───── 시작 ───── */
 (async()=>{
   try{B=await get('boot');if(!B.ok)throw new Error(B.msg);}
   catch(e){$('#app').innerHTML=`<div class="loading">연결이 안 돼요. 잠시 뒤 새로고침해 주세요.</div>${footer()}`;return;}
+  const q=new URLSearchParams(location.search).get('tab');if(q)TAB=q;
   draw();
+  setInterval(()=>{if(!document.hidden&&TAB==='time'&&SUB==='time'&&B.cfg.eventDate===kst().d)vTime();},60000);
 })();
 </script>
 </body>
