@@ -1,4 +1,4 @@
-<!-- 파일명: index.html | @version 2.1.0 — 학생 배부용 사이트: 홈·시간표·선수 명단·점수판(대진표)·반티 모아 보기·응원 음원 추천 -->
+<!-- 파일명: index.html | @version 3.0.0 — 학생 배부용 사이트: 홈·시간표·선수 명단·점수판(대진표)·반티 모아 보기·응원 음원 추천 -->
 <!doctype html>
 <html lang="ko">
 <head>
@@ -240,6 +240,22 @@ button,input{font-family:inherit}
 .sheet .acts .no{background:#eef1ee;color:var(--ink2);flex:.5}
 .sheet .acts .go{background:var(--blue);color:#fff}
 .sheet .acts .go:disabled{opacity:.5}
+.two{display:grid;grid-template-columns:1fr 1.3fr;gap:8px}.two .inp{margin:0}
+.mycls{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px}
+.mycls .t{font-size:12.5px;font-weight:800;color:var(--muted);margin-bottom:8px}
+.clsr{display:flex;gap:5px;margin-top:8px}
+.clsr button{flex:1;min-width:0;height:40px;border-radius:10px;border:1.5px solid var(--line2);background:#fff;font-weight:800;font-size:clamp(12px,3.6vw,14px);color:var(--ink2);cursor:pointer;white-space:nowrap;font-family:inherit}
+.clsr button.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.supc .suph{display:flex;align-items:center;gap:6px}.supc .suph b{font-size:16px}
+.sups{font-size:12.5px;color:var(--muted);margin:3px 0 8px}
+.supc ul{margin:0 0 8px;padding-left:18px;font-size:14px;line-height:1.7}
+.supb{font-size:12.5px;color:var(--ok);font-weight:700;margin-bottom:10px}
+.supm{margin-top:10px;border-top:1px dashed var(--line2);padding-top:8px;font-size:13.5px}
+.supm .t{font-size:12px;font-weight:800;color:var(--muted2);margin-bottom:4px}.supm p{margin:3px 0}.supm small{color:var(--muted);font-size:11px;margin-left:3px}
+.pl.g{background:#e3e7e4;color:var(--muted)}
+.rolep{display:flex;flex-wrap:wrap;gap:6px}
+.rolep button{height:40px;padding:0 14px;border-radius:999px;border:1.5px solid var(--line2);background:#fff;font-weight:800;font-size:14px;color:var(--ink2);cursor:pointer;font-family:inherit}
+.rolep button.on{background:var(--blue);border-color:var(--blue);color:#fff}
 .empty{margin:14px 16px 0;padding:22px 16px;background:#fff;border:1px dashed var(--line2);border-radius:14px;text-align:center;color:var(--muted);font-size:13.5px;line-height:1.6}
 </style>
 </head>
@@ -261,15 +277,28 @@ button,input{font-family:inherit}
   <div class="pv" id="sgPv"><img id="sgPvI" alt=""><div><b>✓ 영상 찾았어요</b><p>맞는 영상인지 확인해 주세요</p></div></div>
   <label class="fl" for="sgTitle">노래 제목</label><input class="inp" id="sgTitle" maxlength="60" autocomplete="off" placeholder="예: Supernova">
   <label class="fl" for="sgArtist">가수</label><input class="inp" id="sgArtist" maxlength="40" autocomplete="off" placeholder="예: aespa">
+  <label class="fl">추천한 사람 <span style="color:var(--muted2);font-weight:600">(다른 학생에게는 반만 보여요)</span></label>
+  <div class="two"><input class="inp num" id="sgSid" inputmode="numeric" maxlength="4" placeholder="학번 4자리" autocomplete="off"><input class="inp" id="sgName" placeholder="이름" autocomplete="off"></div>
   <div class="msg" id="sgMsg" style="margin:8px 0 0"></div>
   <div class="acts"><button class="no" id="sgNo">닫기</button><button class="go" id="sgGo">추천 보내기</button></div>
   <div class="lim" id="sgLim"></div>
+</div></div>
+<div class="sheet-ov" id="supSheet"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="spT">
+  <div class="gr"></div><h3 id="spT">서포터즈 신청</h3><div class="sub">비밀번호 없이 학번과 이름만 적어요 · 기간 안에는 다시 보내서 고칠 수 있어요</div>
+  <label class="fl">학번 · 이름</label>
+  <div class="two"><input class="inp num" id="spSid" inputmode="numeric" maxlength="4" placeholder="학번 4자리" autocomplete="off"><input class="inp" id="spName" placeholder="이름" autocomplete="off"></div>
+  <label class="fl">하고 싶은 일 <span style="color:var(--muted2);font-weight:600">(여러 개 골라도 돼요)</span></label>
+  <div class="rolep" id="spRoles"></div>
+  <label class="fl" for="spWhy">하고 싶은 까닭 <span style="color:var(--muted2);font-weight:600">(한두 줄)</span></label>
+  <textarea class="inp" id="spWhy" maxlength="200" rows="3" style="height:auto;padding:10px 14px;line-height:1.5;font-family:inherit;font-size:16px" placeholder="예: 반 친구들과 응원을 이끌고 싶어요"></textarea>
+  <div class="msg" id="spMsg" style="margin:8px 0 0"></div>
+  <div class="acts"><button class="no" id="spNo">닫기</button><button class="go" id="spGo">신청 보내기</button></div>
 </div></div>
 <div class="toast" id="toast"></div>
 
 <script>
 const API='https://script.google.com/macros/s/AKfycbxLj-YCN1PJIQ5r4KnbaLyeCD997tRVkZoKJQ9Y-Fan75w4xx-4YJjUGsMZ-binoVeN/exec';
-const PAGE_VERSION='2.1.0', PAGE_DEPLOYED='2026-11-14 00:05';
+const PAGE_VERSION='3.0.0', PAGE_DEPLOYED='2026-11-15 00:32';
 const BANTI_URL='banti.html';
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -285,11 +314,14 @@ function dlgClose(v){$('#ov').classList.remove('show');const r=dlgRes;dlgRes=nul
 $('#dlgOk').onclick=()=>dlgClose(true);$('#dlgNo').onclick=()=>dlgClose(false);
 document.addEventListener('keydown',e=>{
   if($('#ov').classList.contains('show')){if(e.key==='Enter'){e.preventDefault();dlgClose(true);}if(e.key==='Escape'){e.preventDefault();dlgClose(false);}return;}
-  if(e.key==='Escape'){if($('#bigPh').classList.contains('show'))$('#bigPh').classList.remove('show');else if($('#sheet').classList.contains('show'))closeSheet();}});
+  if(e.key==='Escape'){if($('#bigPh').classList.contains('show'))$('#bigPh').classList.remove('show');else if($('#sheet').classList.contains('show'))closeSheet();else if($('#supSheet').classList.contains('show'))closeSup();}});
 const uiAlert=m=>uiDialog(m,false), uiConfirm=m=>uiDialog(m,true);
 let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2200);}
 
-let B=null, ME=ls.get('sd_me'), TAB=ls.get('sd_tab')||'home', G=ME?ME.key[0]:'1', SUB='time', SCO='score', PEV='relay', SGV='likes';
+/* 로그인 없음 — MYK: 고른 우리 반(이 기기에만), WHO: 추천·신청 때 적은 학번·이름(다음에 미리 채우기), DEV: 하트용 기기 번호 */
+ls.del('sd_me');
+let B=null, MYK=ls.get('sd_myk'), WHO=ls.get('sd_who'), TAB=ls.get('sd_tab')||'home', G=MYK?MYK[0]:'1', SUB='time', SCO='score', PEV='relay', SGV='likes';
+let DEV=ls.get('sd_dev');if(!DEV){DEV=Array.from({length:16},()=>'abcdefghijkmnpqrstuvwxyz23456789'[Math.random()*32|0]).join('');ls.set('sd_dev',DEV);}
 let SONGS=null, PLAYERS=null, SG_FRESH='', SG_HL=0;
 const PH={};
 
@@ -313,8 +345,6 @@ function progState(p){if(!B.cfg.eventDate)return '';const k=kst();if(k.d<B.cfg.e
 function whoTxt(w){w=(w||[]).map(x=>String(x||'').trim());if(w[0]&&!w[1]&&!w[2])return w[0];
   if(/^\d+$/.test(w[0])&&w[0]===w[1]&&w[1]===w[2])return '학년마다 '+w[0]+'명';
   return w.map((x,i)=>x?(i+1)+'학년 '+x+(/^\d+$/.test(x)?'명':''):'').filter(Boolean).join(' · ');}
-const myEvNames=()=>(ME&&ME.mine||[]).map(ev=>norm(EVN(ev)));
-const isMine=p=>myEvNames().some(n=>norm(p.name).indexOf(n)>=0)||(ME&&/줄다리기/.test(p.name)&&!/한마음/.test(p.name));
 
 /* 반티 사진 → 화면 색 (사진에서 가장 많이 쓰인 진한 색) */
 async function photo(fid,size){if(!fid)return null;const k=fid+(size||'');if(PH[k])return PH[k];
@@ -336,81 +366,90 @@ function draw(){
 const footer=()=>`<div class="vf"><span id="ft">혜원 체육의 날</span> · v${PAGE_VERSION} · 배포 ${PAGE_DEPLOYED} (KST)<br>ⓒKIMJINHO</div>`;
 const gchips=(fn)=>`<div class="chipr">${['1','2','3'].map(g=>`<button data-g="${g}" class="${G===g?'on':''}">${g}학년</button>`).join('')}</div>`;
 function bindG(fn){$('#app').querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{G=b.dataset.g;fn();});}
-const needMe=what=>`<div class="empty">${what}는 우리 학교 학생만 볼 수 있어요.<br><b>홈</b>에서 학번과 이름으로 나를 찾아 주세요.<br><button class="big blue" style="margin-top:12px" data-go="home">나를 찾으러 가기</button></div>`;
 function bindGo(){$('#app').querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));}
 
-/* ═══ 홈 ═══ */
-function vLogin(msg){
-  $('#app').innerHTML=`<div class="hero" style="padding-bottom:30px"><div class="cls">${esc(B.year)} 혜원여자중학교</div><h1 id="htitle">혜원 체육의 날</h1><div class="me">${esc(fmtLong(B.cfg.eventDate)+' '+B.cfg.startTime+' · '+B.cfg.place)}</div>
-    <div class="dd">${ddHTML()}</div></div>
-  <div class="login"><h1>나를 찾아요</h1><p>학번과 이름을 넣으면 우리 반 순서, 내 종목, 선수 명단을 보여 주고 음원도 추천할 수 있어요.</p>
-  <div class="msg" id="lmsg">${esc(msg||'')}</div>
-  <input class="inp num" id="sid" inputmode="numeric" maxlength="4" placeholder="학번 4자리 (예: 2105)" autocomplete="off">
-  <input class="inp" id="nm" placeholder="이름" autocomplete="off">
-  <button class="big blue" id="goIn">들어가기</button>
-  <p style="margin:14px 0 0;font-size:13px;text-align:center">시간표·점수판·반티는 로그인하지 않아도 볼 수 있어요.</p>
-  <div class="more"><button data-go="time">시간표</button><button data-go="score">점수판</button></div>
-  <div class="more"><a href="${BANTI_URL}">반 대표 — 반티·선수 등록 ›</a></div></div>${footer()}`;
-  bindGo();
-  const goIn=async()=>{const sid=$('#sid').value.trim(),name=$('#nm').value.trim();if(!/^\d{4}$/.test(sid)||!name){$('#lmsg').textContent='학번 4자리와 이름을 넣어 주세요.';return;}
-    $('#goIn').disabled=true;$('#goIn').textContent='찾는 중…';
-    try{const r=await post({a:'me',sid,name});if(!r.ok){$('#lmsg').textContent=r.msg;$('#goIn').disabled=false;$('#goIn').textContent='들어가기';return;}
-      ME=r;ls.set('sd_me',{sid:r.sid,name:r.name,key:r.key});G=r.key[0];SONGS=null;PLAYERS=null;vHome();}
-    catch(e){$('#lmsg').textContent='연결이 안 돼요. 잠시 뒤 다시 해 주세요.';$('#goIn').disabled=false;$('#goIn').textContent='들어가기';}};
-  $('#goIn').onclick=goIn;$('#nm').onkeydown=e=>{if(e.key==='Enter')goIn();};$('#sid').onkeydown=e=>{if(e.key==='Enter')$('#nm').focus();};
-}
+/* ═══ 홈 — 공개 자료라 로그인 없이. «우리 반»은 고르면 이 기기에 기억만 한다 ═══ */
 function ddHTML(){const dd=dday();return `<b class="num">${dd==null?'':dd>0?'D-'+dd:dd===0?'D-DAY':''}</b><small>${esc(fmtLong(B.cfg.eventDate))}</small>`;}
-async function checkMe(){if(!ME||ME.mine)return true;
-  try{const r=await post({a:'me',sid:ME.sid,name:ME.name});if(!r.ok){ls.del('sd_me');ME=null;return r.msg;}ME=r;}catch(e){}return true;}
+let PICK_G=null;
+function supCard(){const S=B.sup||{};if(!S.state||S.state==='hidden')return '';
+  const fmt=v=>{if(!v)return '';const d=new Date(v+':00+09:00');return `${d.getMonth()+1}/${d.getDate()}(${WK[d.getDay()]}) ${v.slice(11,16)}`;};
+  const q=S.quota||{},qs=[3,2,1].every(g=>+q[g]===+q[3])?'학년별 '+q[3]+'명':[3,2,1].map(g=>g+'학년 '+(+q[g]||0)+'명').join(' · ');
+  const st=({open:['신청 중','r'],soon:['곧 열려요','b'],end:['마감','g']})[S.state]||['',''];
+  const mem=S.resultShow&&S.members&&S.members.length?`<div class="supm"><div class="t">서포터즈 명단</div>${[3,2,1].map(g=>{const L=S.members.filter(m=>m.key[0]===String(g));return L.length?`<p><b>${g}학년</b> ${L.map(m=>esc(m.name)+(m.role?`<small>${esc(m.role)}</small>`:'')).join(' · ')}</p>`:'';}).join('')}</div>`:'';
+  return `<div class="sec"><h2>서포터즈</h2><div class="card supc"><div class="suph"><b>${esc(S.title)}</b><span class="pl ${st[1]}">${st[0]}</span></div>
+    <div class="sups">${S.from||S.to?esc(fmt(S.from)+' ~ '+fmt(S.to))+' · ':''}${esc(qs)}</div>
+    <ul>${String(S.duties||'').split(/\n/).map(x=>x.trim()).filter(Boolean).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+    ${S.benefit?`<div class="supb">${esc(S.benefit)}</div>`:''}
+    ${S.state==='open'?'<button class="big blue" id="supGo">서포터즈 신청하기</button>':''}${mem}</div></div>`;}
 async function vHome(){
-  if(!ME){vLogin();return;}
-  const ck=await checkMe();if(ck!==true){vLogin(ck);return;}
-  if(TAB!=='home')return;
-  const k=ME.key,bt=(B.banti||{})[k]||{};
-  const mine=ME.mine||[];
-  const evCards=mine.length?mine.map(ev=>{const ps=progFor(ev);const t=ps[0]?span(ps[0]).start:'';
-    return `<div class="ev"><div class="t num">${esc(t)||'–'}<small>${ps.length>1?'예선·결승':'시작'}</small></div><div><b>${esc(EVN(ev))}</b><p>${ps.map(p=>esc(p.name)+' '+esc(p.time)).join(' · ')||'시간은 시간표를 봐 주세요'}</p></div></div>`;}).join('')
-    :`<div class="none">아직 등록된 종목이 없어요. 반 대표가 선수 등록을 마치면 여기에 나와요.<br><b>학생 1명은 최소 1종목, 최대 2종목</b>에 나가요.</div>`;
+  const k=MYK,bt=k?(B.banti||{})[k]||{}:{};
   const P=B.program||[],live=P.find(p=>progState(p)==='live'),next=P.find(p=>progState(p)===''&&(kst().d===B.cfg.eventDate));
-  const myNext=P.find(p=>isMine(p)&&progState(p)!=='done');
-  const sr=(B.scores.rows||{})[k];
-  $('#app').innerHTML=`<div class="hero"><div class="cls">${esc(B.year)} 혜원 체육의 날</div><h1 id="htitle">${esc(k)}</h1><div class="me">${esc(ME.sid)} ${esc(ME.name)}${ME.supporter?' · 서포터즈':''}</div>
-    <div class="dd">${ddHTML()}</div>
-    <div class="tee" id="tee">${bt.fid?'':shirt('#dfe5df')}</div></div>
+  const sr=k?(B.scores.rows||{})[k]:null;
+  const g0=PICK_G||(k?k[0]:'');
+  const picker=`<div class="mycls"><div class="t">${k?'우리 반 바꾸기':'우리 반을 고르면 순위와 반티를 먼저 보여 줘요'}</div>
+    <div class="chipr" style="margin:0;padding:0">${['1','2','3'].map(g=>`<button data-pg="${g}" class="${g0===g?'on':''}">${g}학년</button>`).join('')}</div>
+    ${g0?`<div class="clsr">${CNs(g0).map(n=>`<button data-pk="${g0}-${n}" class="${k===g0+'-'+n?'on':''}">${n}반</button>`).join('')}</div>`:''}</div>`;
+  $('#app').innerHTML=`<div class="hero"><div class="cls">${esc(B.year)} 혜원여자중학교</div><h1 id="htitle">${k?esc(k):'혜원 체육의 날'}</h1><div class="me">${esc(fmtLong(B.cfg.eventDate)+' '+B.cfg.startTime+' · '+B.cfg.place)}</div>
+    <div class="dd">${ddHTML()}</div>${k?`<div class="tee" id="tee">${bt.fid&&B.cfg.bantiShow?'':shirt('#dfe5df')}</div>`:''}</div>
     <div class="body">
     ${live?`<div class="sec"><h2>지금 하는 경기</h2><div class="nowc"><span class="tag">진행 중</span><div><b>${esc(live.name)}</b><p>${esc(live.time)} · ${esc(whoTxt(live.who))}</p></div></div></div>`:''}
-    <div class="sec"><h2>우리 반</h2><div class="mini">
+    ${k?`<div class="sec"><h2>우리 반</h2><div class="mini">
       <div><small>학년 순위</small><b class="num">${B.scores.started&&sr&&sr.rank?esc(sr.rank)+'위':'경기 전'}</b><em>${B.scores.started&&sr?sr.total+'점':'당일 점수가 올라와요'}</em></div>
-      <div><small>${myNext?'우리 다음 순서':next?'다음 순서':'시작'}</small><b class="num">${esc(myNext?span(myNext).start:next?span(next).start:B.cfg.startTime)}</b><em>${esc(myNext?myNext.name:next?next.name:B.cfg.place)}</em></div></div></div>
-    <div class="sec"><h2>내 종목</h2><div class="mine">${evCards}</div></div>
-    <div class="sec"><div class="more"><button data-go="time" id="toPl">우리 반 선수 명단 ›</button><button data-go="song">응원 음원 추천 ›</button></div>
-      <div class="more"><a href="${BANTI_URL}">반 대표 — 반티·선수 등록 ›</a></div></div>
-    <div class="sec"><div class="card" style="font-size:13.5px;color:var(--muted)">담임 ${esc(bt.teacher||'')} 선생님 · 내가 아니면 <button class="link" id="out" style="display:inline;margin:0">다시 찾기</button></div></div></div>${footer()}`;
-  bindGo();$('#toPl').onclick=()=>{SUB='players';G=k[0];go('time');};
-  $('#out').onclick=()=>{ls.del('sd_me');ME=null;SONGS=null;PLAYERS=null;vLogin();};
-  if(bt.fid){const src=await photo(bt.fid);if(src&&$('#tee')){$('#tee').innerHTML=`<img alt="${esc(k)} 반티" src="${src}">`;
+      <div><small>${next?'다음 순서':'시작'}</small><b class="num">${esc(next?span(next).start:B.cfg.startTime)}</b><em>${esc(next?next.name:B.cfg.place)}</em></div></div>
+      ${bt.teacher?`<div class="card" style="font-size:13.5px;color:var(--muted);margin-top:8px">담임 ${esc(bt.teacher)} 선생님</div>`:''}</div>`:''}
+    <div class="sec">${picker}</div>
+    ${supCard()}
+    <div class="sec"><div class="more"><button data-go="time">시간표 ›</button><button id="toPl">${k?'우리 반 선수 명단':'종목별 선수 명단'} ›</button></div>
+      <div class="more"><button data-go="score">점수판·대진표 ›</button><button data-go="song">응원 음원 추천 ›</button></div>
+      <div class="more"><a href="${BANTI_URL}">반 대표 — 반티·선수 등록 ›</a></div></div></div>${footer()}`;
+  bindGo();
+  $('#toPl').onclick=()=>{SUB='players';if(k)G=k[0];go('time');};
+  $('#app').querySelectorAll('[data-pg]').forEach(b=>b.onclick=()=>{PICK_G=b.dataset.pg;vHome();});
+  $('#app').querySelectorAll('[data-pk]').forEach(b=>b.onclick=()=>{const v=b.dataset.pk;MYK=MYK===v?null:v;if(MYK){ls.set('sd_myk',MYK);G=MYK[0];}else ls.del('sd_myk');PICK_G=null;vHome();});
+  const sg=$('#supGo');sg&&(sg.onclick=openSup);
+  if(k&&bt.fid&&B.cfg.bantiShow){const src=await photo(bt.fid);if(src&&$('#tee')){$('#tee').innerHTML=`<img alt="${esc(k)} 반티" src="${src}">`;
     const c=await teamColor(src);if(c)document.documentElement.style.setProperty('--team',c);}}
 }
 
+/* ═══ 서포터즈 신청 — 학번·이름만 (비밀번호 없음) ═══ */
+let SUP_R=[];
+function openSup(){const S=B.sup||{};if(S.state!=='open'){uiAlert('지금은 서포터즈 신청 기간이 아니에요.');return;}
+  $('#spSid').value=WHO?WHO.sid:'';$('#spName').value=WHO?WHO.name:'';$('#spWhy').value='';$('#spMsg').textContent='';SUP_R=[];
+  const draw=()=>{$('#spRoles').innerHTML=(S.roles||[]).map(r=>`<button type="button" class="${SUP_R.includes(r)?'on':''}" data-r="${esc(r)}">${esc(r)}</button>`).join('');
+    $('#spRoles').querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{const r=b.dataset.r;SUP_R=SUP_R.includes(r)?SUP_R.filter(x=>x!==r):[...SUP_R,r];draw();});};
+  draw();$('#spGo').disabled=false;$('#spGo').textContent='신청 보내기';
+  $('#supSheet').classList.add('show');setTimeout(()=>$(WHO?'#spWhy':'#spSid').focus(),60);}
+function closeSup(){$('#supSheet').classList.remove('show');}
+$('#spNo').onclick=closeSup;
+$('#supSheet').onclick=e=>{if(e.target.id==='supSheet')closeSup();};
+$('#spGo').onclick=async()=>{const sid=$('#spSid').value.trim(),name=$('#spName').value.trim(),why=$('#spWhy').value.trim();
+  if(!/^\d{4}$/.test(sid)||!name){$('#spMsg').textContent='학번 4자리와 이름을 넣어 주세요.';return;}
+  if(!SUP_R.length){$('#spMsg').textContent='하고 싶은 일을 하나 이상 골라 주세요.';return;}
+  $('#spGo').disabled=true;$('#spGo').textContent='보내는 중…';
+  try{const r=await post({a:'supApply',sid,name,roles:SUP_R,why});
+    if(!r.ok){$('#spGo').disabled=false;$('#spGo').textContent='신청 보내기';$('#spMsg').textContent=r.msg;return;}
+    WHO={sid,name:r.name};ls.set('sd_who',WHO);closeSup();
+    uiAlert(`${r.name} 학생, 서포터즈 ${r.again?'신청을 고쳤어요':'신청했어요'}!\n${r.savedAt}\n\n뽑히면 선생님이 알려 줘요. 기간 안에는 다시 보내서 고칠 수 있어요.`);}
+  catch(e){$('#spGo').disabled=false;$('#spGo').textContent='신청 보내기';$('#spMsg').textContent='연결이 안 돼요. 다시 눌러 주세요.';}};
+
 /* ═══ 시간표 · 선수 명단 ═══ */
 function vTime(){
-  const head=`<div class="ph-h"><h1 id="htitle">${SUB==='time'?'오늘 시간표':'종목별 선수 명단'}</h1><p>${SUB==='time'?esc(fmtLong(B.cfg.eventDate)+' · '+B.cfg.place+' · '+B.cfg.startTime+' 시작')+' · 전교생 같은 순서':'반 대표가 등록한 선수 · 우리 반은 파란 테두리'}</p></div>
+  const head=`<div class="ph-h"><h1 id="htitle">${SUB==='time'?'오늘 시간표':'종목별 선수 명단'}</h1><p>${SUB==='time'?esc(fmtLong(B.cfg.eventDate)+' · '+B.cfg.place+' · '+B.cfg.startTime+' 시작')+' · 전교생 같은 순서':'반 대표가 등록한 선수'+(MYK?' · 우리 반은 파란 테두리':'')}</p></div>
     <div class="seg"><button data-s="time" class="${SUB==='time'?'on':''}">시간표</button><button data-s="players" class="${SUB==='players'?'on':''}">선수 명단</button></div>`;
   const bindS=()=>$('#app').querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{SUB=b.dataset.s;vTime();});
   if(SUB==='time'){
-    const li=(B.program||[]).map(p=>{const st=progState(p),me=ME&&isMine(p);
-      return `<li class="${st} ${me?'mine':''}"><div class="tm num">${esc(span(p).start)}</div><div class="bx"><b>${esc(p.name)}${st==='live'?'<span class="pl r">진행 중</span>':''}${me&&ME.mine&&myEvNames().some(n=>norm(p.name).indexOf(n)>=0)?'<span class="pl b">내 종목</span>':''}</b><p>${esc(p.time)}${whoTxt(p.who)?' · '+esc(whoTxt(p.who)):''}</p></div></li>`;}).join('');
+    const li=(B.program||[]).map(p=>{const st=progState(p);
+      return `<li class="${st}"><div class="tm num">${esc(span(p).start)}</div><div class="bx"><b>${esc(p.name)}${st==='live'?'<span class="pl r">진행 중</span>':''}</b><p>${esc(p.time)}${whoTxt(p.who)?' · '+esc(whoTxt(p.who)):''}</p></div></li>`;}).join('');
     $('#app').innerHTML=head+`<ul class="tt">${li||'<li><div></div><div class="bx">시간표가 아직 없어요</div></li>'}</ul>
       ${B.cfg.eventDate&&kst().d===B.cfg.eventDate?'<div class="note">지난 순서는 흐리게, 지금 순서는 빨간 테두리로 보여요. 진행에 따라 조금씩 달라질 수 있어요.</div>':''}${footer()}`;
     bindS();return;
   }
-  if(!ME){$('#app').innerHTML=head+needMe('선수 명단')+footer();bindS();bindGo();return;}
   if(!PLAYERS){$('#app').innerHTML=head+'<div class="loading">선수 명단 불러오는 중…</div>'+footer();bindS();
-    post({a:'players',sid:ME.sid,name:ME.name}).then(r=>{if(!r.ok){uiAlert(r.msg);return;}PLAYERS=r.players;if(TAB==='time'&&SUB==='players')vTime();}).catch(()=>toast('연결이 안 돼요'));return;}
+    post({a:'players'}).then(r=>{if(!r.ok){uiAlert(r.msg);return;}PLAYERS=r.players;if(TAB==='time'&&SUB==='players')vTime();}).catch(()=>toast('연결이 안 돼요'));return;}
   const ev=B.events.find(e=>e.key===PEV)||B.events[0];
   const cards=CNs(G).map(n=>{const k=G+'-'+n,ns=((PLAYERS[k]||{})[ev.key])||[];
-    return `<div class="pc ${ME.key===k?'mine':''}"><h3>${esc(k)}${ME.key===k?' <span class="pl b">우리 반</span>':''}<small class="num">${ns.length}/${ev.quota}명</small></h3>
-      <div class="nm">${ns.length?ns.map(x=>`<span class="${ME.key===k&&x===ME.name?'me':''}">${esc(x)}</span>`).join(''):'<em>아직 등록 전이에요</em>'}</div></div>`;}).join('');
+    return `<div class="pc ${MYK===k?'mine':''}"><h3>${esc(k)}${MYK===k?' <span class="pl b">우리 반</span>':''}<small class="num">${ns.length}/${ev.quota}명</small></h3>
+      <div class="nm">${ns.length?ns.map(x=>`<span>${esc(x)}</span>`).join(''):'<em>아직 등록 전이에요</em>'}</div></div>`;}).join('');
   $('#app').innerHTML=head+`<div class="chipr blue">${B.events.map(e=>`<button data-e="${e.key}" class="${e.key===ev.key?'on':''}">${esc(e.name)}</button>`).join('')}</div>${gchips()}
     <div class="plist">${cards}</div><div class="note">줄다리기는 반 전체가 나가요. 명단이 바뀌면 새로 열 때 반영돼요.</div>${footer()}`;
   bindS();bindG(vTime);
@@ -422,7 +461,7 @@ async function refresh(){try{const r=await get('boot');if(r.ok){B=r;if(TAB==='sc
 function vScore(){
   const seg=`<div class="seg" style="margin:0;border-radius:0;padding:6px 16px 8px;background:#121a15"><button data-c="score" class="${SCO==='score'?'on':''}" style="${SCO==='score'?'':'color:#a9b4ac'}">점수</button><button data-c="bracket" class="${SCO==='bracket'?'on':''}" style="${SCO==='bracket'?'':'color:#a9b4ac'}">대진표</button></div>`;
   const bindC=()=>$('#app').querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{SCO=b.dataset.c;vScore();});
-  const my=ME?ME.key:'';
+  const my=MYK||'';
   if(SCO==='bracket'){
     const h=Object.keys(B.bracket).map(k=>{const b=B.bracket[k],x=b.grades[G];const has=x.order.some(o=>o);
       return `<div class="bk card"><h3>${esc(b.name)}</h3>${has?`<div class="order">${x.order.map(o=>`<span class="${o?(o===my?'me':''):'e'}">${esc(o||'?')}</span>`).join('')}</div><div class="games">${x.games.map(esc).join(' · ')}</div>`:'<div class="games">아직 추첨 전이에요</div>'}</div>`;}).join('');
@@ -451,7 +490,7 @@ setInterval(()=>{if(!document.hidden&&TAB==='score'&&SCO==='score'&&B&&B.scores.
 function vBanti(){
   const head=`<div class="ph-h"><h1 id="htitle">우리 학교 반티</h1><p>반 대표가 올린 반티 · 누르면 크게 보여요</p></div>`;
   if(!B.cfg.bantiShow){$('#app').innerHTML=head+`<div class="empty">반티는 선생님이 공개하면 여기에서 모두 볼 수 있어요.<br>반 대표는 아래에서 우리 반 반티를 올려요.<br><a class="big blue" style="display:grid;place-items:center;margin-top:12px;text-decoration:none" href="${BANTI_URL}">반 대표 — 반티 올리기</a></div>${footer()}`;return;}
-  const my=ME?ME.key:'';
+  const my=MYK||'';
   $('#app').innerHTML=head+gchips()+`<div class="gal">${CNs(G).map(n=>{const k=G+'-'+n,b=B.banti[k]||{};
     return `<button class="gc ${k===my?'mine':''}" data-k="${k}" ${b.fid?'':'disabled'}><div class="im" ${b.fid?`data-fid="${esc(b.fid)}"`:''}>${b.fid?'불러오는 중…':'아직 안 올렸어요'}</div>
       <div class="cap"><b>${esc(k)}</b><em style="${k===my?'color:var(--blue)':''}">${k===my?'우리 반':esc(b.teacher?b.teacher+' T':'')}</em></div></button>`;}).join('')}</div>${footer()}`;
@@ -466,7 +505,7 @@ $('#bigPh').onclick=e=>{if(e.target.id==='bigPh')$('#bigPh').classList.remove('s
 /* ═══ 응원 음원 ═══ */
 const heart=on=>`<svg viewBox="0 0 24 24" fill="${on?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M12 21s-8-5-8-11a5 5 0 019-3 5 5 0 019 3c0 6-8 11-8 11z"/></svg>`;
 const ytId=u=>{u=String(u||'').trim();if(!u)return '';const m=u.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([\w-]{11})/)||u.match(/^([\w-]{11})$/);return m?m[1]:null;};
-async function loadSongs(){const r=await get('songs',ME?{sid:ME.sid}:null);if(!r.ok)throw new Error(r.msg);SONGS=r;}
+async function loadSongs(){const r=await get('songs',WHO?{sid:WHO.sid,dev:DEV}:{dev:DEV});if(!r.ok)throw new Error(r.msg);SONGS=r;}
 async function vSong(){
   const head=`<div class="ph-h"><h1 id="htitle">응원 음원 추천</h1><p>경기 사이·점심시간에 틀 노래 · 하트가 많은 곡부터 틀어요</p></div>`;
   if(!SONGS){$('#app').innerHTML=head+'<div class="loading">불러오는 중…</div>'+footer();
@@ -474,9 +513,9 @@ async function vSong(){
     if(TAB!=='song')return;}
   let L=SONGS.songs.slice();
   if(SGV==='likes')L.sort((a,b)=>b.likes-a.likes||b.id-a.id);else L.sort((a,b)=>b.id-a.id);
-  if(SGV==='mine')L=L.filter(x=>x.mine);
+  if(SGV==='mine'&&WHO)L=L.filter(x=>x.mine);
   const left=Math.max(0,SONGS.dayMax-SONGS.usedToday);
-  $('#app').innerHTML=head+`<div class="seg"><button data-v="likes" class="${SGV==='likes'?'on':''}">인기순</button><button data-v="new" class="${SGV==='new'?'on':''}">최신순</button><button data-v="mine" class="${SGV==='mine'?'on':''}">내 추천</button></div>
+  $('#app').innerHTML=head+`<div class="seg"><button data-v="likes" class="${SGV==='likes'?'on':''}">인기순</button><button data-v="new" class="${SGV==='new'?'on':''}">최신순</button>${WHO?`<button data-v="mine" class="${SGV==='mine'?'on':''}">내 추천</button>`:''}</div>
     ${SG_FRESH?`<div class="savedat ok" style="margin:8px 0 0">✅ 추천했어요 · ${esc(SG_FRESH)}</div>`:''}
     ${!SONGS.open?'<div class="rule">지금은 추천을 받지 않아요. 하트는 누를 수 있어요.</div>':''}
     <div class="sl">${L.map(x=>`<div class="sg ${x.id===SG_HL?'hl':''}" id="sg${x.id}">
@@ -486,27 +525,25 @@ async function vSong(){
       <button class="lk ${x.liked?'on':''}" data-id="${x.id}" aria-label="하트 ${x.likes}">${heart(x.liked)}<span class="num">${x.likes}</span></button></div>`).join('')
       ||`<div class="empty" style="margin:0">${SGV==='mine'?'아직 내가 추천한 곡이 없어요.':'아직 추천된 곡이 없어요. 첫 곡을 추천해 주세요!'}</div>`}</div>
     <div style="height:70px"></div>${footer()}
-    ${SONGS.open?`<button class="fab" id="fab">＋ 추천하기${ME?` <small style="opacity:.75;font-weight:700">· 오늘 ${left}곡 남음</small>`:''}</button>`:''}`;
+    ${SONGS.open?`<button class="fab" id="fab">＋ 추천하기${WHO?` <small style="opacity:.75;font-weight:700">· 오늘 ${left}곡 남음</small>`:''}</button>`:''}`;
   $('#app').querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{SGV=b.dataset.v;SG_HL=0;vSong();});
   $('#app').querySelectorAll('.lk').forEach(b=>b.onclick=()=>like(+b.dataset.id,b));
   const f=$('#fab');f&&(f.onclick=openSheet);
   if(SG_HL){const el=$('#sg'+SG_HL);el&&el.scrollIntoView({block:'center',behavior:'smooth'});}
 }
 async function like(id,btn){
-  if(!ME){if(await uiConfirm('하트는 우리 학교 학생만 누를 수 있어요.\n홈에서 나를 먼저 찾을까요?'))go('home');return;}
   const x=SONGS.songs.find(y=>y.id===id);if(!x)return;
   x.liked=!x.liked;x.likes+=x.liked?1:-1;btn.classList.toggle('on',x.liked);btn.innerHTML=heart(x.liked)+`<span class="num">${x.likes}</span>`;btn.disabled=true;
-  try{const r=await post({a:'songLike',sid:ME.sid,name:ME.name,id});btn.disabled=false;
+  try{const r=await post({a:'songLike',dev:DEV,id});btn.disabled=false;
     if(!r.ok){x.liked=!x.liked;x.likes+=x.liked?1:-1;btn.classList.toggle('on',x.liked);btn.innerHTML=heart(x.liked)+`<span class="num">${x.likes}</span>`;uiAlert(r.msg);return;}
     x.likes=r.likes;x.liked=r.liked;btn.innerHTML=heart(x.liked)+`<span class="num">${x.likes}</span>`;}
   catch(e){btn.disabled=false;x.liked=!x.liked;x.likes+=x.liked?1:-1;btn.classList.toggle('on',x.liked);btn.innerHTML=heart(x.liked)+`<span class="num">${x.likes}</span>`;toast('연결이 안 돼요');}
 }
 async function openSheet(){
-  if(!ME){if(await uiConfirm('추천은 우리 학교 학생만 할 수 있어요.\n홈에서 나를 먼저 찾을까요?'))go('home');return;}
-  const left=Math.max(0,SONGS.dayMax-SONGS.usedToday);
+  const left=WHO?Math.max(0,SONGS.dayMax-SONGS.usedToday):SONGS.dayMax;
   if(!left){uiAlert(`오늘은 ${SONGS.dayMax}곡을 다 추천했어요. 내일 또 추천해 주세요!\n마음에 드는 곡에 하트를 눌러 주세요.`);return;}
-  ['#sgUrl','#sgTitle','#sgArtist'].forEach(s=>$(s).value='');$('#sgMsg').textContent='';$('#sgPv').classList.remove('show');
-  $('#sgLim').textContent=`오늘 ${SONGS.dayMax}곡 중 ${left}곡 남았어요 · 학교에 맞지 않는 곡은 선생님이 숨길 수 있어요`;
+  ['#sgUrl','#sgTitle','#sgArtist'].forEach(s=>$(s).value='');$('#sgSid').value=WHO?WHO.sid:'';$('#sgName').value=WHO?WHO.name:'';$('#sgMsg').textContent='';$('#sgPv').classList.remove('show');
+  $('#sgLim').textContent=`한 사람이 하루 ${SONGS.dayMax}곡까지${WHO?` · 오늘 ${left}곡 남았어요`:''} · 학교에 맞지 않는 곡은 선생님이 숨길 수 있어요`;
   $('#sgGo').disabled=false;$('#sgGo').textContent='추천 보내기';
   $('#sheet').classList.add('show');setTimeout(()=>$('#sgUrl').focus(),60);
 }
@@ -516,14 +553,15 @@ $('#sheet').onclick=e=>{if(e.target.id==='sheet')closeSheet();};
 $('#sgUrl').oninput=()=>{const v=ytId($('#sgUrl').value);$('#sgMsg').textContent=v===null?'유튜브 주소가 아닌 것 같아요.':'';
   if(v){$('#sgPvI').src=`https://i.ytimg.com/vi/${v}/mqdefault.jpg`;$('#sgPv').classList.add('show');}else $('#sgPv').classList.remove('show');};
 $('#sgGo').onclick=async()=>{
-  const url=$('#sgUrl').value.trim(),title=$('#sgTitle').value.trim(),artist=$('#sgArtist').value.trim();
+  const url=$('#sgUrl').value.trim(),title=$('#sgTitle').value.trim(),artist=$('#sgArtist').value.trim(),sid=$('#sgSid').value.trim(),name=$('#sgName').value.trim();
+  if(!/^\d{4}$/.test(sid)||!name){$('#sgMsg').textContent='추천한 사람 — 학번 4자리와 이름을 넣어 주세요.';(sid?$('#sgName'):$('#sgSid')).focus();return;}
   if(ytId(url)===null){$('#sgMsg').textContent='유튜브 주소가 아닌 것 같아요. 비워 둬도 돼요.';return;}
   if(!title){$('#sgMsg').textContent='노래 제목을 넣어 주세요.';$('#sgTitle').focus();return;}
   $('#sgGo').disabled=true;$('#sgGo').textContent='보내는 중…';
-  try{const r=await post({a:'songAdd',sid:ME.sid,name:ME.name,url,title,artist});
+  try{const r=await post({a:'songAdd',sid,name,dev:DEV,url,title,artist});
     if(!r.ok){$('#sgGo').disabled=false;$('#sgGo').textContent='추천 보내기';$('#sgMsg').textContent=r.msg;
       if(r.dupId){closeSheet();SG_HL=r.dupId;SGV='likes';toast('이미 있는 곡이에요 — 하트를 눌러 주세요');vSong();}return;}
-    SONGS=r;SG_FRESH=r.savedAt;SG_HL=r.added;SGV='new';closeSheet();toast('✅ 추천했어요');vSong();}
+    WHO={sid,name};ls.set('sd_who',WHO);SONGS=r;SG_FRESH=r.savedAt;SG_HL=r.added;SGV='new';closeSheet();toast('✅ 추천했어요');vSong();}
   catch(e){$('#sgGo').disabled=false;$('#sgGo').textContent='추천 보내기';$('#sgMsg').textContent='연결이 안 돼요. 다시 눌러 주세요.';}
 };
 
