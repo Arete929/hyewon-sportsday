@@ -1,4 +1,4 @@
-<!-- 파일명: index.html | @version 3.0.0 — 학생 배부용 사이트: 홈·시간표·선수 명단·점수판(대진표)·반티 모아 보기·응원 음원 추천 -->
+<!-- 파일명: index.html | @version 3.0.1 — 학생 배부용 사이트: 홈·시간표·선수 명단·점수판(대진표)·반티 모아 보기·응원 음원 추천 -->
 <!doctype html>
 <html lang="ko">
 <head>
@@ -298,8 +298,7 @@ button,input{font-family:inherit}
 
 <script>
 const API='https://script.google.com/macros/s/AKfycbxLj-YCN1PJIQ5r4KnbaLyeCD997tRVkZoKJQ9Y-Fan75w4xx-4YJjUGsMZ-binoVeN/exec';
-const PAGE_VERSION='3.0.0', PAGE_DEPLOYED='2026-11-15 00:32';
-const BANTI_URL='banti.html';
+const PAGE_VERSION='3.0.1', PAGE_DEPLOYED='2026-11-15 00:36';
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const ls={get(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
@@ -400,8 +399,7 @@ async function vHome(){
     <div class="sec">${picker}</div>
     ${supCard()}
     <div class="sec"><div class="more"><button data-go="time">시간표 ›</button><button id="toPl">${k?'우리 반 선수 명단':'종목별 선수 명단'} ›</button></div>
-      <div class="more"><button data-go="score">점수판·대진표 ›</button><button data-go="song">응원 음원 추천 ›</button></div>
-      <div class="more"><a href="${BANTI_URL}">반 대표 — 반티·선수 등록 ›</a></div></div></div>${footer()}`;
+      <div class="more"><button data-go="score">점수판·대진표 ›</button><button data-go="song">응원 음원 추천 ›</button></div></div></div>${footer()}`;
   bindGo();
   $('#toPl').onclick=()=>{SUB='players';if(k)G=k[0];go('time');};
   $('#app').querySelectorAll('[data-pg]').forEach(b=>b.onclick=()=>{PICK_G=b.dataset.pg;vHome();});
@@ -488,8 +486,8 @@ setInterval(()=>{if(!document.hidden&&TAB==='score'&&SCO==='score'&&B&&B.scores.
 
 /* ═══ 반티 모아 보기 ═══ */
 function vBanti(){
-  const head=`<div class="ph-h"><h1 id="htitle">우리 학교 반티</h1><p>반 대표가 올린 반티 · 누르면 크게 보여요</p></div>`;
-  if(!B.cfg.bantiShow){$('#app').innerHTML=head+`<div class="empty">반티는 선생님이 공개하면 여기에서 모두 볼 수 있어요.<br>반 대표는 아래에서 우리 반 반티를 올려요.<br><a class="big blue" style="display:grid;place-items:center;margin-top:12px;text-decoration:none" href="${BANTI_URL}">반 대표 — 반티 올리기</a></div>${footer()}`;return;}
+  const head=`<div class="ph-h"><h1 id="htitle">우리 학교 반티</h1><p>우리 학교 반티 모아 보기 · 누르면 크게 보여요</p></div>`;
+  if(!B.cfg.bantiShow){$('#app').innerHTML=head+`<div class="empty">반티는 선생님이 공개하면 여기에서 모두 볼 수 있어요.</div>${footer()}`;return;}
   const my=MYK||'';
   $('#app').innerHTML=head+gchips()+`<div class="gal">${CNs(G).map(n=>{const k=G+'-'+n,b=B.banti[k]||{};
     return `<button class="gc ${k===my?'mine':''}" data-k="${k}" ${b.fid?'':'disabled'}><div class="im" ${b.fid?`data-fid="${esc(b.fid)}"`:''}>${b.fid?'불러오는 중…':'아직 안 올렸어요'}</div>
