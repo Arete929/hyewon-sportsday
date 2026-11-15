@@ -1,4 +1,4 @@
-<!-- 파일명: index.html | @version 3.0.1 — 학생 배부용 사이트: 홈·시간표·선수 명단·점수판(대진표)·반티 모아 보기·응원 음원 추천 -->
+<!-- 파일명: index.html | @version 3.1.0 — 학생 배부용 사이트: 홈·시간표·선수 명단·점수판(대진표)·반티 모아 보기·응원 음원 추천 -->
 <!doctype html>
 <html lang="ko">
 <head>
@@ -298,7 +298,7 @@ button,input{font-family:inherit}
 
 <script>
 const API='https://script.google.com/macros/s/AKfycbxLj-YCN1PJIQ5r4KnbaLyeCD997tRVkZoKJQ9Y-Fan75w4xx-4YJjUGsMZ-binoVeN/exec';
-const PAGE_VERSION='3.0.1', PAGE_DEPLOYED='2026-11-15 00:36';
+const PAGE_VERSION='3.1.0', PAGE_DEPLOYED='2026-11-15 23:55';
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const ls={get(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
@@ -379,7 +379,7 @@ function supCard(){const S=B.sup||{};if(!S.state||S.state==='hidden')return '';
     <div class="sups">${S.from||S.to?esc(fmt(S.from)+' ~ '+fmt(S.to))+' · ':''}${esc(qs)}</div>
     <ul>${String(S.duties||'').split(/\n/).map(x=>x.trim()).filter(Boolean).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
     ${S.benefit?`<div class="supb">${esc(S.benefit)}</div>`:''}
-    ${S.state==='open'?'<button class="big blue" id="supGo">서포터즈 신청하기</button>':''}${mem}</div></div>`;}
+    ${S.state==='open'?'<a class="big blue" href="survey.html" style="display:grid;place-items:center;text-decoration:none">서포터즈 신청하기</a>':S.state==='soon'?'<a class="big" href="survey.html" style="display:grid;place-items:center;text-decoration:none;background:#eef1ee;color:var(--ink2)">설문 미리 보기</a>':''}${mem}</div></div>`;}
 async function vHome(){
   const k=MYK,bt=k?(B.banti||{})[k]||{}:{};
   const P=B.program||[],live=P.find(p=>progState(p)==='live'),next=P.find(p=>progState(p)===''&&(kst().d===B.cfg.eventDate));
