@@ -1,4 +1,4 @@
-<!-- 파일명: index.html | @version 3.1.0 — 학생 배부용 사이트: 홈·시간표·선수 명단·점수판(대진표)·반티 모아 보기·응원 음원 추천 -->
+<!-- 파일명: index.html | @version 3.2.0 — 학생 배부용 사이트: 홈·시간표·선수 명단·점수판(대진표)·반티 모아 보기·응원 음원 추천 -->
 <!doctype html>
 <html lang="ko">
 <head>
@@ -298,7 +298,7 @@ button,input{font-family:inherit}
 
 <script>
 const API='https://script.google.com/macros/s/AKfycbxLj-YCN1PJIQ5r4KnbaLyeCD997tRVkZoKJQ9Y-Fan75w4xx-4YJjUGsMZ-binoVeN/exec';
-const PAGE_VERSION='3.1.0', PAGE_DEPLOYED='2026-11-15 23:55';
+const PAGE_VERSION='3.2.0', PAGE_DEPLOYED='2026-11-18 22:57';
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const ls={get(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
@@ -446,10 +446,10 @@ function vTime(){
     post({a:'players'}).then(r=>{if(!r.ok){uiAlert(r.msg);return;}PLAYERS=r.players;if(TAB==='time'&&SUB==='players')vTime();}).catch(()=>toast('연결이 안 돼요'));return;}
   const ev=B.events.find(e=>e.key===PEV)||B.events[0];
   const cards=CNs(G).map(n=>{const k=G+'-'+n,ns=((PLAYERS[k]||{})[ev.key])||[];
-    return `<div class="pc ${MYK===k?'mine':''}"><h3>${esc(k)}${MYK===k?' <span class="pl b">우리 반</span>':''}<small class="num">${ns.length}/${ev.quota}명</small></h3>
+    return `<div class="pc ${MYK===k?'mine':''}"><h3>${esc(k)}${MYK===k?' <span class="pl b">우리 반</span>':''}<small class="num">${ns.length}/${ev.q&&ev.q[k]!=null?ev.q[k]:ev.quota}명</small></h3>
       <div class="nm">${ns.length?ns.map(x=>`<span>${esc(x)}</span>`).join(''):'<em>아직 등록 전이에요</em>'}</div></div>`;}).join('');
   $('#app').innerHTML=head+`<div class="chipr blue">${B.events.map(e=>`<button data-e="${e.key}" class="${e.key===ev.key?'on':''}">${esc(e.name)}</button>`).join('')}</div>${gchips()}
-    <div class="plist">${cards}</div><div class="note">줄다리기는 반 전체가 나가요. 명단이 바뀌면 새로 열 때 반영돼요.</div>${footer()}`;
+    <div class="plist">${cards}</div><div class="note">${(B.evAll||[]).filter(e=>e.type==='all').map(e=>esc(e.name)).join('·')?(B.evAll||[]).filter(e=>e.type==='all').map(e=>esc(e.name)).join('·')+'은(는) 반 전체가 나가요. ':''}명단이 바뀌면 새로 열 때 반영돼요.</div>${footer()}`;
   bindS();bindG(vTime);
   $('#app').querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{PEV=b.dataset.e;vTime();});
 }
@@ -470,14 +470,14 @@ function vScore(){
   const S=B.scores.rows;
   const rows=CNs(G).map(n=>({k:G+'-'+n,...(S[G+'-'+n]||{total:0,rank:'',ranks:{},pts:{}})})).sort((a,b)=>b.total-a.total||a.k.localeCompare(b.k));
   const mx=Math.max(1,...rows.map(r=>r.total));
-  const RK=[['flip','판뒤집기'],['rope','단체줄넘기'],['leg','2인3각'],['tug','줄다리기'],['relay','이어달리기']];
+  const RK=(B.scores.events||[]).map(e=>[e.key,e.name]);
   const sw=k=>{const f=B.cfg.bantiShow&&(B.banti[k]||{}).fid;return `<div class="sw" ${f?`data-fid="${esc(f)}"`:''}>${shirt(k===my?'var(--blue)':'#dfe5df')}</div>`;};
   $('#app').innerHTML=`<div class="sb-h"><h1 id="htitle">${esc(B.year)} 실시간 점수판</h1><small>학년 안 순위 · ${esc(B.at.slice(11,16))} 기준</small>${B.scores.started?'<div class="live"><i></i>LIVE</div>':''}</div>${seg}${gchips()}
   ${B.scores.started?`<div class="rank">${rows.map(r=>`<div class="rk ${r.rank==='1'?'first':''} ${r.k===my?'mine':''}"><div class="n num">${esc(r.rank||'-')}</div>${sw(r.k)}
     <div><b>${esc(r.k)}${r.k===my?' <span class="pl b">우리 반</span>':''}</b><div class="bar"><i style="width:${r.total/mx*100}%"></i></div>
     <div class="chips">${RK.filter(x=>r.ranks[x[0]]).map(x=>`<span class="${r.ranks[x[0]]==='1'?'w':''}">${x[1]} ${r.ranks[x[0]]}위</span>`).join('')}</div></div>
     <div class="pt num">${r.total}<small>점</small></div></div>`).join('')}</div>`
-  :`<div class="note">아직 경기 전이에요. 당일 경기가 끝날 때마다 점수가 여기에 올라와요.<br><br>배점 — 판뒤집기·단체줄넘기·2인3각: 1위 200~220 · 2위 150 · 3위 이하 100<br>줄다리기·이어달리기: 1위 300 · 2위 200 · 3위 이하 100</div>`}${footer()}`;
+  :`<div class="note">아직 경기 전이에요. 당일 경기가 끝날 때마다 점수가 여기에 올라와요.${(B.evAll||[]).filter(e=>e.score).length?'<br><br>배점 — '+(B.evAll||[]).filter(e=>e.score).map(e=>esc(e.name)+' '+e.pts.slice(0,3).map((p,i)=>(i+1)+'위 '+p).join('·')).join(' / '):''}</div>`}${footer()}`;
   bindC();bindG(vScore);
   $('#app').querySelectorAll('.sw[data-fid]').forEach(async el=>{const s=await photo(el.dataset.fid);if(s&&el.isConnected)el.innerHTML=`<img alt="" src="${s}">`;});
 }
