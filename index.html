@@ -1,4 +1,4 @@
-<!-- 파일명: index.html | @version 3.2.0 — 학생 배부용 사이트: 홈·시간표·선수 명단·점수판(대진표)·반티 모아 보기·응원 음원 추천 -->
+<!-- 파일명: index.html | @version 3.3.0 — 학생 배부용 사이트: 홈·시간표·선수 명단·점수판(대진표)·반티 모아 보기·응원 음원 추천 -->
 <!doctype html>
 <html lang="ko">
 <head>
@@ -90,7 +90,8 @@ button,input{font-family:inherit}
 /* 대진표 */
 .bk{margin:12px 16px 0}
 .bk h3{font-size:15px;margin:0 0 8px}
-.order{display:flex;gap:6px}
+.order{display:flex;gap:6px;align-items:center}.order+.order{margin-top:6px}
+.order .gl{flex:none;width:58px;font-size:12px;color:var(--muted);font-weight:800}
 .order span{flex:1;height:42px;border-radius:10px;border:1.5px solid var(--line2);background:#fff;display:grid;place-items:center;font-weight:800;font-size:14px}
 .order span.me{border-color:var(--blue);background:var(--blue);color:#fff}
 .order span.e{border-style:dashed;color:var(--muted2);font-weight:600}
@@ -298,7 +299,7 @@ button,input{font-family:inherit}
 
 <script>
 const API='https://script.google.com/macros/s/AKfycbxLj-YCN1PJIQ5r4KnbaLyeCD997tRVkZoKJQ9Y-Fan75w4xx-4YJjUGsMZ-binoVeN/exec';
-const PAGE_VERSION='3.2.0', PAGE_DEPLOYED='2026-11-18 22:57';
+const PAGE_VERSION='3.3.0', PAGE_DEPLOYED='2026-11-18 23:27';
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const ls={get(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
@@ -461,10 +462,16 @@ function vScore(){
   const bindC=()=>$('#app').querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{SCO=b.dataset.c;vScore();});
   const my=MYK||'';
   if(SCO==='bracket'){
-    const h=Object.keys(B.bracket).map(k=>{const b=B.bracket[k],x=b.grades[G];const has=x.order.some(o=>o);
-      return `<div class="bk card"><h3>${esc(b.name)}</h3>${has?`<div class="order">${x.order.map(o=>`<span class="${o?(o===my?'me':''):'e'}">${esc(o||'?')}</span>`).join('')}</div><div class="games">${x.games.map(esc).join(' · ')}</div>`:'<div class="games">아직 추첨 전이에요</div>'}</div>`;}).join('');
-    $('#app').innerHTML=`<div class="sb-h"><h1 id="htitle">대진표</h1><small>추첨 순서(왼쪽부터) · 우리 반은 파란색</small></div>${seg}${gchips()}${h}
-    <div class="note">이어달리기는 예선 2경기 뒤 결승, 판뒤집기는 3판 2선승 토너먼트, 줄다리기는 학년별 토너먼트예요.</div>${footer()}`;
+    const sl=(o,i)=>`<span class="${o[i]?(o[i]===my?'me':''):'e'}">${esc(o[i]||'?')}</span>`;
+    const h=Object.keys(B.bracket).map(k=>{const b=B.bracket[k],x=b.grades[G],o=x.order||[];const has=o.some(v=>v);
+      let body='<div class="games">아직 추첨 전이에요</div>';
+      if(has&&b.mode==='heat'){const n=o.filter(Boolean).length,z=b.size===2?(n<=4?[2,2]:[2,2,1]):(n<=3?[n]:[3,n-3]);let i=0;
+        body=z.map((c,j)=>{const r=`<div class="order"><b class="gl">예선 ${j+1}조</b>${Array.from({length:c},(_,q)=>sl(o,i+q)).join('')}</div>`;i+=c;return r;}).join('')
+          +`<div class="games">결승 — ${z.length===2?'각 조 1위 + 2위 중 기록 좋은 1반 (3반)':'각 조 1위'}</div>`;}
+      else if(has){body=`<div class="order"><b class="gl">1경기</b>${sl(o,0)}${sl(o,1)}</div><div class="order"><b class="gl">2경기</b>${sl(o,2)}${sl(o,3)}</div>
+          <div class="order"><b class="gl">3경기</b><span class="e">1경기 승</span>${sl(o,4)}</div><div class="games">${esc(o[4]||'5번')} 1회전 부전승 · 4경기 결승: 2경기 승 대 3경기 승</div>`;}
+      return `<div class="bk card"><h3>${esc(b.name)} <small style="font-weight:700;color:var(--muted)">${b.mode==='heat'?'조 경주':'토너먼트'}</small></h3>${body}</div>`;}).join('');
+    $('#app').innerHTML=`<div class="sb-h"><h1 id="htitle">대진표</h1><small>추첨 결과 · 우리 반은 파란색</small></div>${seg}${gchips()}${h||'<div class="note">대진표가 있는 종목이 없어요.</div>'}${footer()}`;
     bindC();bindG(vScore);return;
   }
   const S=B.scores.rows;
