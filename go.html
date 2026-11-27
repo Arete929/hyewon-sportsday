@@ -1,15 +1,17 @@
-<!-- 파일명: go.html | @version 1.0.0 -->
+<!-- 파일명: go.html | @version 1.0.1 -->
 <!doctype html>
 <html lang="ko">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1d4ed8">
+<link rel="icon" href="img/logo64.png">
 <title>혜원 체육의 날</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 <!--
   혜원 체육의 날 — 학생 배부용 링크 모음 (GitHub Pages, 코드 없이 누구나)
-  @version 1.0.0
+  @version 1.0.1
+  [1.0.1] 머리 아이콘을 혜원여중 교표(img/logo.webp)로, 탭 아이콘도 교표.
   [1.0.0] 배경: 가로 화면(PC·태블릿) img/bg_wide.webp, 세로 화면(폰) img/bg_tall.webp — 흰 막을 덮어 은은하게.
   [1.0.0] 링크트리처럼 큰 단추를 세로로. 지금은 «반티 갤러리» 하나(관리자 «학생 사이트에 공개»를 켰을 때 사진이 보인다).
           앱스크립트는 JSON API(boot·photo)로만 부른다 — 구글 주소 밖이라 만 13세 미만 계정 차단이 없다.
@@ -25,8 +27,7 @@ body{font-family:Pretendard,-apple-system,system-ui,sans-serif;color:var(--ink);
 button{font-family:inherit}
 .app{max-width:520px;margin:0 auto;min-height:100vh;padding:0 16px 24px}
 .hero{padding:34px 4px 20px;text-align:center}
-.hero .mk{width:64px;height:64px;border-radius:18px;background:var(--blue);margin:0 auto 12px;display:grid;place-items:center}
-.hero .mk svg{width:34px;height:34px}
+.hero .mk{width:84px;height:84px;margin:0 auto 10px;display:block;filter:drop-shadow(0 4px 10px rgba(20,40,30,.18))}
 .hero small{display:block;color:var(--blue);font-weight:800;font-size:13px}
 .hero h1{margin:2px 0 6px;font-size:24px;letter-spacing:-.02em}
 .hero p{margin:0;color:var(--muted);font-size:14px}
@@ -67,7 +68,7 @@ button{font-family:inherit}
 <div class="lb" id="lb"><b id="lbT"></b><button id="lbX">닫기</button><img id="lbI" alt=""></div>
 <script>
 const API='https://script.google.com/macros/s/AKfycbxLj-YCN1PJIQ5r4KnbaLyeCD997tRVkZoKJQ9Y-Fan75w4xx-4YJjUGsMZ-binoVeN/exec';
-const PAGE_VERSION='1.0.0',PAGE_DEPLOYED='2026-11-27 09:36';
+const PAGE_VERSION='1.0.1',PAGE_DEPLOYED='2026-11-27 09:41';
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function get(a,q){const r=await fetch(API+'?a='+a+(q?'&'+new URLSearchParams(q):''));return r.json();}
@@ -81,7 +82,7 @@ function dday(){const d=B&&B.cfg.eventDate;if(!d)return '';const t=new Date(),k=
 function whenTxt(){const d=B&&B.cfg.eventDate;if(!d)return '';const x=new Date(d+'T00:00:00');return `${x.getMonth()+1}월 ${x.getDate()}일 (${'일월화수목금토'[x.getDay()]}) ${esc(B.cfg.startTime||'')} · ${esc(B.cfg.place||'')}`;}
 function vHome(){
   const dd=dday(),n=B?Object.values(B.banti||{}).filter(x=>x.fid).length:0;
-  $('#app').innerHTML=`<div class="hero"><div class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M6 21l4-7 4 3 2 4"/><circle cx="14" cy="4.5" r="2"/><path d="M8 11l3-3 3 2 3-1"/></svg></div>
+  $('#app').innerHTML=`<div class="hero"><img class="mk" src="img/logo.webp" alt="혜원여자중학교 교표" width="84" height="84">
     <small>${esc(B?B.year:'')} 혜원여자중학교</small><h1>혜원 체육의 날</h1><p>${whenTxt()}</p>${dd?`<span class="dd">${dd}</span>`:''}</div>
   <div class="links">
     <button class="lk" data-go="banti"><span class="ic"><svg viewBox="0 0 24 24">${IC.banti}</svg></span><span><b>반티 갤러리</b><span>${B&&B.cfg.bantiShow?`우리 학교 반티 모아 보기 · ${n}반 올림`:'반티가 공개되면 여기서 볼 수 있어요'}</span></span><span class="go">›</span></button>
