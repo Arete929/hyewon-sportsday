@@ -1,4 +1,4 @@
-<!-- 파일명: teacher.html | @version 1.0.0 -->
+<!-- 파일명: teacher.html | @version 1.1.0 -->
 <!doctype html>
 <html lang="ko">
 <head>
@@ -9,7 +9,8 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 <!--
   혜원 체육의 날 — 담임 확인 (교사용, GitHub Pages)
-  @version 1.0.0
+  @version 1.1.0
+  [1.1.0] 학생 타일 아래에 그 학생이 맡은 종목 꼬리표(고르는 중인 것도 바로 반영).
   [1.0.0] 반 대표 코드로 들어오면 그 반 담임(그 반만 편집, 다른 반은 보기만), 체육교사 마스터 코드로 들어오면 모든 반 편집.
           반별 자세히(반티 사진·종목 선수) · 반티 모아 보기(15개 반) · 선수 현황 표. 저장하면 시각과 저장한 사람을 보여 준다.
           앱스크립트는 JSON API(tLogin·tData·tSave·tBanti)로만 부른다. 마스터 코드는 서버에만 있다.
@@ -71,11 +72,15 @@ label.btn input{display:none}
 .pk.ro span{padding:0 10px;background:#fff;color:var(--ink2);border:1px solid var(--line2)}
 .pk em{font-style:normal;color:var(--muted2);font-size:13px;align-self:center;padding-left:4px}
 .ros{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:5px}
-.ros button{height:42px;border-radius:9px;border:1.5px solid var(--line2);background:#fff;font:inherit;font-size:13px;font-weight:700;color:var(--ink2);cursor:pointer;line-height:1.1}
+.ros button{min-height:42px;padding:4px 3px;border-radius:9px;border:1.5px solid var(--line2);background:#fff;font:inherit;font-size:13px;font-weight:700;color:var(--ink2);cursor:pointer;line-height:1.1}
 .ros button small{display:block;font-size:10.5px;color:var(--muted2);font-weight:600}
 .ros button.on{background:var(--blue);border-color:var(--blue);color:#fff}.ros button.on small{color:#dfe7fb}
 .ros button.no{background:#f4f5f4;color:#b4bdb6;text-decoration:line-through;cursor:not-allowed}
 .ros button.cf{border-style:dashed}
+.ros .evt{display:flex;flex-wrap:wrap;justify-content:center;gap:2px;margin-top:3px;text-decoration:none}
+.ros .evt i{font-style:normal;font-size:10px;font-weight:700;line-height:1;padding:3px 5px;border-radius:99px;background:var(--ok-t);color:var(--ok);white-space:nowrap}
+.ros button.on .evt i{background:rgba(255,255,255,.22);color:#fff}
+.ros button.no .evt i{background:#e9ece9;color:#9aa49c}
 .rule{font-size:12px;color:var(--warn);background:var(--warn-t);border-radius:8px;padding:6px 10px;margin-top:8px}
 .bad{font-size:12px;color:var(--danger);background:var(--danger-t);border-radius:8px;padding:6px 10px;margin-top:8px}
 /* 반티 모아 보기 */
@@ -132,7 +137,7 @@ label.btn input{display:none}
 <div class="lb" id="lb"><b id="lbT"></b><button id="lbX">닫기</button><img id="lbI" alt=""></div>
 <script>
 const API='https://script.google.com/macros/s/AKfycbxLj-YCN1PJIQ5r4KnbaLyeCD997tRVkZoKJQ9Y-Fan75w4xx-4YJjUGsMZ-binoVeN/exec';
-const PAGE_VERSION='1.0.0',PAGE_DEPLOYED='2026-11-26 21:55';
+const PAGE_VERSION='1.1.0',PAGE_DEPLOYED='2026-11-27 10:58';
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function get(a,q){const r=await fetch(API+'?a='+a+(q?'&'+new URLSearchParams(q):''));return r.json();}
@@ -216,7 +221,8 @@ function vCls(){
       <div class="evs">${evs.map(e=>{const n=(e.key===ev.key?P:(c.players[e.key]||[])).length,qq=qOf(e,c.key);return `<button data-e="${e.key}" class="${e.key===ev.key?'on':''} ${n>=qq?'full':''}">${esc(e.name)}<em>${n}/${qq}</em></button>`;}).join('')}</div>
       <div class="pk ${ed?'':'ro'}">${P.map(x=>`<span>${esc(nm[x]||x)}${ed?`<button data-x="${x}" aria-label="빼기">×</button>`:''}</span>`).join('')||'<em>아직 아무도 없어요</em>'}</div>
       ${ed?`<div class="ros">${c.roster.map(s=>{const on=P.includes(s.sid),o=other[s.sid]||[];const no=!on&&!!ev.grp&&o.some(k=>gOf[k]===ev.grp),cf=!on&&!no&&MAX>0&&o.length>=MAX;
-        return `<button data-s="${s.sid}" class="${on?'on':no?'no':cf?'cf no':''}">${esc(s.name)}<small>${s.sid}</small></button>`;}).join('')||'<div class="ro-note">이 반 학생 명단이 아직 없어요.</div>'}</div>
+        const mine=evs.filter(e=>(e.key===ev.key?P:(c.players[e.key]||[])).includes(s.sid));
+        return `<button data-s="${s.sid}" class="${on?'on':no?'no':cf?'cf no':''}">${esc(s.name)}<small>${s.sid}</small>${mine.length?`<span class="evt">${mine.map(e=>`<i>${esc(e.name)}</i>`).join('')}</span>`:''}</button>`;}).join('')||'<div class="ro-note">이 반 학생 명단이 아직 없어요.</div>'}</div>
         <div class="rule">${esc(S.d.evRule||'')} · 줄 그은 학생은 고를 수 없어요</div>
         <div class="row"><button class="btn" id="psave" ${dirty?'':'disabled'}>${esc(ev.name)} 저장</button>${dirty?'<button class="btn line" id="pundo">되돌리기</button>':''}</div>`:''}
       ${c.bad&&c.bad.length?`<div class="bad">규칙에 어긋난 학생 ${c.bad.length}명: ${c.bad.map(x=>esc(nm[x]||x)).join(', ')}</div>`:''}

@@ -1,4 +1,4 @@
-<!-- 파일명: index.html | @version 3.4.0 — 학생 배부용 사이트: 홈·시간표·선수 명단·점수판(대진표)·반티 모아 보기·응원 음원 추천 -->
+<!-- 파일명: index.html | @version 3.4.1 — 학생 배부용 사이트: 홈·시간표·선수 명단·점수판(대진표)·반티 모아 보기·응원 음원 추천 -->
 <!doctype html>
 <html lang="ko">
 <head>
@@ -282,7 +282,7 @@ button,input{font-family:inherit}
 
 <script>
 const API='https://script.google.com/macros/s/AKfycbxLj-YCN1PJIQ5r4KnbaLyeCD997tRVkZoKJQ9Y-Fan75w4xx-4YJjUGsMZ-binoVeN/exec';
-const PAGE_VERSION='3.4.0', PAGE_DEPLOYED='2026-11-27 09:56';
+const PAGE_VERSION='3.4.1', PAGE_DEPLOYED='2026-11-27 10:58';
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const ls={get(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
@@ -340,9 +340,11 @@ function teamColor(src){return new Promise(res=>{const im=new Image();im.onload=
 
 /* ───── 탭 ───── */
 $('#tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>go(b.dataset.t));
-function go(t){TAB=t;ls.set('sd_tab',t);draw();scrollTo(0,0);}
+const NEWSITE={home:'go.html',banti:'go.html#banti'};
+function go(t){if(NEWSITE[t]){location.href=NEWSITE[t];return;}TAB=t;ls.set('sd_tab',t);draw();scrollTo(0,0);}
 function draw(){
   if(!['home','time','score','banti','song'].includes(TAB))TAB='home';
+  if(NEWSITE[TAB]){ls.set('sd_tab','time');location.replace(NEWSITE[TAB]);return;}
   $('#tabs').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.t===TAB));
   ({home:vHome,time:vTime,score:vScore,banti:vBanti,song:vSong})[TAB]();
 }
