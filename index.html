@@ -1,4 +1,4 @@
-<!-- 파일명: index.html | @version 3.3.0 — 학생 배부용 사이트: 홈·시간표·선수 명단·점수판(대진표)·반티 모아 보기·응원 음원 추천 -->
+<!-- 파일명: index.html | @version 3.4.0 — 학생 배부용 사이트: 홈·시간표·선수 명단·점수판(대진표)·반티 모아 보기·응원 음원 추천 -->
 <!doctype html>
 <html lang="ko">
 <head>
@@ -247,12 +247,6 @@ button,input{font-family:inherit}
 .clsr{display:flex;gap:5px;margin-top:8px}
 .clsr button{flex:1;min-width:0;height:40px;border-radius:10px;border:1.5px solid var(--line2);background:#fff;font-weight:800;font-size:clamp(12px,3.6vw,14px);color:var(--ink2);cursor:pointer;white-space:nowrap;font-family:inherit}
 .clsr button.on{background:var(--blue);border-color:var(--blue);color:#fff}
-.supc .suph{display:flex;align-items:center;gap:6px}.supc .suph b{font-size:16px}
-.sups{font-size:12.5px;color:var(--muted);margin:3px 0 8px}
-.supc ul{margin:0 0 8px;padding-left:18px;font-size:14px;line-height:1.7}
-.supb{font-size:12.5px;color:var(--ok);font-weight:700;margin-bottom:10px}
-.supm{margin-top:10px;border-top:1px dashed var(--line2);padding-top:8px;font-size:13.5px}
-.supm .t{font-size:12px;font-weight:800;color:var(--muted2);margin-bottom:4px}.supm p{margin:3px 0}.supm small{color:var(--muted);font-size:11px;margin-left:3px}
 .pl.g{background:#e3e7e4;color:var(--muted)}
 .rolep{display:flex;flex-wrap:wrap;gap:6px}
 .rolep button{height:40px;padding:0 14px;border-radius:999px;border:1.5px solid var(--line2);background:#fff;font-weight:800;font-size:14px;color:var(--ink2);cursor:pointer;font-family:inherit}
@@ -284,22 +278,11 @@ button,input{font-family:inherit}
   <div class="acts"><button class="no" id="sgNo">닫기</button><button class="go" id="sgGo">추천 보내기</button></div>
   <div class="lim" id="sgLim"></div>
 </div></div>
-<div class="sheet-ov" id="supSheet"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="spT">
-  <div class="gr"></div><h3 id="spT">서포터즈 신청</h3><div class="sub">비밀번호 없이 학번과 이름만 적어요 · 기간 안에는 다시 보내서 고칠 수 있어요</div>
-  <label class="fl">학번 · 이름</label>
-  <div class="two"><input class="inp num" id="spSid" inputmode="numeric" maxlength="4" placeholder="학번 4자리" autocomplete="off"><input class="inp" id="spName" placeholder="이름" autocomplete="off"></div>
-  <label class="fl">하고 싶은 일 <span style="color:var(--muted2);font-weight:600">(여러 개 골라도 돼요)</span></label>
-  <div class="rolep" id="spRoles"></div>
-  <label class="fl" for="spWhy">하고 싶은 까닭 <span style="color:var(--muted2);font-weight:600">(한두 줄)</span></label>
-  <textarea class="inp" id="spWhy" maxlength="200" rows="3" style="height:auto;padding:10px 14px;line-height:1.5;font-family:inherit;font-size:16px" placeholder="예: 반 친구들과 응원을 이끌고 싶어요"></textarea>
-  <div class="msg" id="spMsg" style="margin:8px 0 0"></div>
-  <div class="acts"><button class="no" id="spNo">닫기</button><button class="go" id="spGo">신청 보내기</button></div>
-</div></div>
 <div class="toast" id="toast"></div>
 
 <script>
 const API='https://script.google.com/macros/s/AKfycbxLj-YCN1PJIQ5r4KnbaLyeCD997tRVkZoKJQ9Y-Fan75w4xx-4YJjUGsMZ-binoVeN/exec';
-const PAGE_VERSION='3.3.0', PAGE_DEPLOYED='2026-11-18 23:27';
+const PAGE_VERSION='3.4.0', PAGE_DEPLOYED='2026-11-27 09:56';
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const ls={get(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
@@ -314,7 +297,7 @@ function dlgClose(v){$('#ov').classList.remove('show');const r=dlgRes;dlgRes=nul
 $('#dlgOk').onclick=()=>dlgClose(true);$('#dlgNo').onclick=()=>dlgClose(false);
 document.addEventListener('keydown',e=>{
   if($('#ov').classList.contains('show')){if(e.key==='Enter'){e.preventDefault();dlgClose(true);}if(e.key==='Escape'){e.preventDefault();dlgClose(false);}return;}
-  if(e.key==='Escape'){if($('#bigPh').classList.contains('show'))$('#bigPh').classList.remove('show');else if($('#sheet').classList.contains('show'))closeSheet();else if($('#supSheet').classList.contains('show'))closeSup();}});
+  if(e.key==='Escape'){if($('#bigPh').classList.contains('show'))$('#bigPh').classList.remove('show');else if($('#sheet').classList.contains('show'))closeSheet();}});
 const uiAlert=m=>uiDialog(m,false), uiConfirm=m=>uiDialog(m,true);
 let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2200);}
 
@@ -371,16 +354,6 @@ function bindGo(){$('#app').querySelectorAll('[data-go]').forEach(b=>b.onclick=(
 /* ═══ 홈 — 공개 자료라 로그인 없이. «우리 반»은 고르면 이 기기에 기억만 한다 ═══ */
 function ddHTML(){const dd=dday();return `<b class="num">${dd==null?'':dd>0?'D-'+dd:dd===0?'D-DAY':''}</b><small>${esc(fmtLong(B.cfg.eventDate))}</small>`;}
 let PICK_G=null;
-function supCard(){const S=B.sup||{};if(!S.state||S.state==='hidden')return '';
-  const fmt=v=>{if(!v)return '';const d=new Date(v+':00+09:00');return `${d.getMonth()+1}/${d.getDate()}(${WK[d.getDay()]}) ${v.slice(11,16)}`;};
-  const q=S.quota||{},qs=[3,2,1].every(g=>+q[g]===+q[3])?'학년별 '+q[3]+'명':[3,2,1].map(g=>g+'학년 '+(+q[g]||0)+'명').join(' · ');
-  const st=({open:['신청 중','r'],soon:['곧 열려요','b'],end:['마감','g']})[S.state]||['',''];
-  const mem=S.resultShow&&S.members&&S.members.length?`<div class="supm"><div class="t">서포터즈 명단</div>${[3,2,1].map(g=>{const L=S.members.filter(m=>m.key[0]===String(g));return L.length?`<p><b>${g}학년</b> ${L.map(m=>esc(m.name)+(m.role?`<small>${esc(m.role)}</small>`:'')).join(' · ')}</p>`:'';}).join('')}</div>`:'';
-  return `<div class="sec"><h2>서포터즈</h2><div class="card supc"><div class="suph"><b>${esc(S.title)}</b><span class="pl ${st[1]}">${st[0]}</span></div>
-    <div class="sups">${S.from||S.to?esc(fmt(S.from)+' ~ '+fmt(S.to))+' · ':''}${esc(qs)}</div>
-    <ul>${String(S.duties||'').split(/\n/).map(x=>x.trim()).filter(Boolean).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
-    ${S.benefit?`<div class="supb">${esc(S.benefit)}</div>`:''}
-    ${S.state==='open'?'<a class="big blue" href="survey.html" style="display:grid;place-items:center;text-decoration:none">서포터즈 신청하기</a>':S.state==='soon'?'<a class="big" href="survey.html" style="display:grid;place-items:center;text-decoration:none;background:#eef1ee;color:var(--ink2)">설문 미리 보기</a>':''}${mem}</div></div>`;}
 async function vHome(){
   const k=MYK,bt=k?(B.banti||{})[k]||{}:{};
   const P=B.program||[],live=P.find(p=>progState(p)==='live'),next=P.find(p=>progState(p)===''&&(kst().d===B.cfg.eventDate));
@@ -398,38 +371,15 @@ async function vHome(){
       <div><small>${next?'다음 순서':'시작'}</small><b class="num">${esc(next?span(next).start:B.cfg.startTime)}</b><em>${esc(next?next.name:B.cfg.place)}</em></div></div>
       ${bt.teacher?`<div class="card" style="font-size:13.5px;color:var(--muted);margin-top:8px">담임 ${esc(bt.teacher)} 선생님</div>`:''}</div>`:''}
     <div class="sec">${picker}</div>
-    ${supCard()}
     <div class="sec"><div class="more"><button data-go="time">시간표 ›</button><button id="toPl">${k?'우리 반 선수 명단':'종목별 선수 명단'} ›</button></div>
       <div class="more"><button data-go="score">점수판·대진표 ›</button><button data-go="song">응원 음원 추천 ›</button></div></div></div>${footer()}`;
   bindGo();
   $('#toPl').onclick=()=>{SUB='players';if(k)G=k[0];go('time');};
   $('#app').querySelectorAll('[data-pg]').forEach(b=>b.onclick=()=>{PICK_G=b.dataset.pg;vHome();});
   $('#app').querySelectorAll('[data-pk]').forEach(b=>b.onclick=()=>{const v=b.dataset.pk;MYK=MYK===v?null:v;if(MYK){ls.set('sd_myk',MYK);G=MYK[0];}else ls.del('sd_myk');PICK_G=null;vHome();});
-  const sg=$('#supGo');sg&&(sg.onclick=openSup);
   if(k&&bt.fid&&B.cfg.bantiShow){const src=await photo(bt.fid);if(src&&$('#tee')){$('#tee').innerHTML=`<img alt="${esc(k)} 반티" src="${src}">`;
     const c=await teamColor(src);if(c)document.documentElement.style.setProperty('--team',c);}}
 }
-
-/* ═══ 서포터즈 신청 — 학번·이름만 (비밀번호 없음) ═══ */
-let SUP_R=[];
-function openSup(){const S=B.sup||{};if(S.state!=='open'){uiAlert('지금은 서포터즈 신청 기간이 아니에요.');return;}
-  $('#spSid').value=WHO?WHO.sid:'';$('#spName').value=WHO?WHO.name:'';$('#spWhy').value='';$('#spMsg').textContent='';SUP_R=[];
-  const draw=()=>{$('#spRoles').innerHTML=(S.roles||[]).map(r=>`<button type="button" class="${SUP_R.includes(r)?'on':''}" data-r="${esc(r)}">${esc(r)}</button>`).join('');
-    $('#spRoles').querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{const r=b.dataset.r;SUP_R=SUP_R.includes(r)?SUP_R.filter(x=>x!==r):[...SUP_R,r];draw();});};
-  draw();$('#spGo').disabled=false;$('#spGo').textContent='신청 보내기';
-  $('#supSheet').classList.add('show');setTimeout(()=>$(WHO?'#spWhy':'#spSid').focus(),60);}
-function closeSup(){$('#supSheet').classList.remove('show');}
-$('#spNo').onclick=closeSup;
-$('#supSheet').onclick=e=>{if(e.target.id==='supSheet')closeSup();};
-$('#spGo').onclick=async()=>{const sid=$('#spSid').value.trim(),name=$('#spName').value.trim(),why=$('#spWhy').value.trim();
-  if(!/^\d{4}$/.test(sid)||!name){$('#spMsg').textContent='학번 4자리와 이름을 넣어 주세요.';return;}
-  if(!SUP_R.length){$('#spMsg').textContent='하고 싶은 일을 하나 이상 골라 주세요.';return;}
-  $('#spGo').disabled=true;$('#spGo').textContent='보내는 중…';
-  try{const r=await post({a:'supApply',sid,name,roles:SUP_R,why});
-    if(!r.ok){$('#spGo').disabled=false;$('#spGo').textContent='신청 보내기';$('#spMsg').textContent=r.msg;return;}
-    WHO={sid,name:r.name};ls.set('sd_who',WHO);closeSup();
-    uiAlert(`${r.name} 학생, 서포터즈 ${r.again?'신청을 고쳤어요':'신청했어요'}!\n${r.savedAt}\n\n뽑히면 선생님이 알려 줘요. 기간 안에는 다시 보내서 고칠 수 있어요.`);}
-  catch(e){$('#spGo').disabled=false;$('#spGo').textContent='신청 보내기';$('#spMsg').textContent='연결이 안 돼요. 다시 눌러 주세요.';}};
 
 /* ═══ 시간표 · 선수 명단 ═══ */
 function vTime(){
