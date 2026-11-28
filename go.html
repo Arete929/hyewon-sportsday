@@ -1,4 +1,4 @@
-<!-- 파일명: go.html | @version 1.2.0 -->
+<!-- 파일명: go.html | @version 1.2.1 -->
 <!doctype html>
 <html lang="ko">
 <head>
@@ -10,7 +10,8 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 <!--
   혜원 체육의 날 — 학생 배부용 링크 모음 (GitHub Pages, 코드 없이 누구나)
-  @version 1.2.0
+  @version 1.2.1
+  [1.2.1] 하단 메뉴 «음원» → «음원 추천».
   [1.2.0] 예전 사이트의 하단 메뉴(홈·시간표·선수·점수판·반티·음원) — 홈·반티는 이 페이지, 나머지는 index.html 의 그 탭.
   [1.1.0] 머리 제목 «2026 혜원 체육의 날»(빗썸고딕 기울임) + 학교 이름 작게 — 이제 이 페이지가 «학생 배부용 사이트».
   [1.0.1] 머리 아이콘을 혜원여중 교표(img/logo.webp)로, 탭 아이콘도 교표.
@@ -80,12 +81,12 @@ button{font-family:inherit}
   <a href="index.html?tab=time" data-t="time"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>시간표·선수</a>
   <a href="index.html?tab=score" data-t="score"><svg viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 01-10 0z"/><path d="M7 6H4a3 3 0 003 4M17 6h3a3 3 0 01-3 4"/></svg>점수판</a>
   <a href="go.html#banti" data-t="banti"><svg viewBox="0 0 24 24"><path d="M8 3l-5 3 2 4 2-1v12h10V9l2 1 2-4-5-3a4 4 0 01-8 0z"/></svg>반티</a>
-  <a href="index.html?tab=song" data-t="song"><svg viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg>음원</a>
+  <a href="index.html?tab=song" data-t="song"><svg viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg>음원 추천</a>
 </div></nav>
 <div class="lb" id="lb"><b id="lbT"></b><button id="lbX">닫기</button><img id="lbI" alt=""></div>
 <script>
 const API='https://script.google.com/macros/s/AKfycbxLj-YCN1PJIQ5r4KnbaLyeCD997tRVkZoKJQ9Y-Fan75w4xx-4YJjUGsMZ-binoVeN/exec';
-const PAGE_VERSION='1.2.0',PAGE_DEPLOYED='2026-11-27 10:58';
+const PAGE_VERSION='1.2.1',PAGE_DEPLOYED='2026-11-28 22:38';
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function get(a,q){const r=await fetch(API+'?a='+a+(q?'&'+new URLSearchParams(q):''));return r.json();}
