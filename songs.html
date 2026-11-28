@@ -1,4 +1,4 @@
-<!-- 파일명: songs.html | @version 1.0.0 -->
+<!-- 파일명: songs.html | @version 1.1.0 -->
 <!doctype html>
 <html lang="ko">
 <head>
@@ -10,7 +10,8 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 <!--
   혜원 체육의 날 — 서포터즈 음원 목록 (GitHub Pages)
-  @version 1.0.0
+  @version 1.1.0
+  [1.1.0] «시험용» 곡 표시, 곡마다 메모 보기·쓰기(서버에 저장 — 관리자 화면과 같이 보인다).
   [1.0.0] 학생이 추천한 곡(숨긴 곡 빼고)을 서포터즈 코드로 열어, 곡을 골라 유튜브 임시 재생목록(watch_videos)으로 틀고
           «재생완료»로 표시한다(점심 걷기 챌린지 방식). 코드는 관리자 «추천 음원»에서 만들고 바꾼다 — 이 페이지에는 없다.
 -->
@@ -62,24 +63,30 @@ button,input{font-family:inherit}
 .dlg{background:#fff;border-radius:16px;padding:18px;max-width:360px;width:100%}.dlg p{margin:0 0 14px;font-size:15px;white-space:pre-wrap}
 .dlg .acts{display:flex;gap:8px;justify-content:flex-end}.dlg button{height:40px;padding:0 16px;border-radius:999px;border:1.5px solid var(--line2);background:#fff;font-weight:800;cursor:pointer}.dlg button.ok{background:var(--ink);color:#fff;border-color:var(--ink)}
 @media (max-width:420px){.th{width:60px;height:34px}.dn{padding:0 8px}}
+.ttag{font-size:10.5px;font-weight:800;background:#ede6fd;color:#5b21b6;border-radius:6px;padding:0 5px;margin-left:5px;vertical-align:1px}
+.memo{display:inline-block;max-width:100%;margin-top:3px;border:0;background:#f1f4f2;color:var(--muted);border-radius:6px;padding:2px 7px;font-size:11.5px;font-weight:700;cursor:pointer;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.memo.on{background:#fff8e6;color:#8a5a00}
+.dlg input{width:100%;height:44px;border:1.5px solid var(--line2);border-radius:10px;padding:0 12px;font-size:16px;margin:0 0 12px}
 </style>
 </head>
 <body>
 <div class="app" id="app"><div class="loading">불러오는 중…</div></div>
 <div class="toast" id="toast"></div>
-<div class="ov" id="ov"><div class="dlg" role="dialog" aria-modal="true"><p id="dlgMsg"></p><div class="acts"><button id="dlgNo">취소</button><button class="ok" id="dlgOk">확인</button></div></div></div>
+<div class="ov" id="ov"><div class="dlg" role="dialog" aria-modal="true"><p id="dlgMsg"></p><input id="dlgIn" maxlength="200" style="display:none"><div class="acts"><button id="dlgNo">취소</button><button class="ok" id="dlgOk">확인</button></div></div></div>
 <script>
 const API='https://script.google.com/macros/s/AKfycbxLj-YCN1PJIQ5r4KnbaLyeCD997tRVkZoKJQ9Y-Fan75w4xx-4YJjUGsMZ-binoVeN/exec';
-const PAGE_VERSION='1.0.0',PAGE_DEPLOYED='2026-11-28 23:23';
+const PAGE_VERSION='1.1.0',PAGE_DEPLOYED='2026-11-28 23:56';
 const YT='https://www.youtube.com',YTI='https://i.ytimg.com';
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const ss={get(k){try{return sessionStorage.getItem(k)}catch(e){return null}},set(k,v){try{sessionStorage.setItem(k,v)}catch(e){}},del(k){try{sessionStorage.removeItem(k)}catch(e){}}};
 let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2400);}
-let dlgRes=null;function uiConfirm(m,ok){return new Promise(r=>{$('#dlgMsg').textContent=m;$('#dlgOk').textContent=ok||'확인';$('#ov').classList.add('show');dlgRes=r;setTimeout(()=>$('#dlgOk').focus(),30);});}
+let dlgRes=null,dlgInp=false;
+function uiConfirm(m,ok){dlgInp=false;$('#dlgIn').style.display='none';return new Promise(r=>{$('#dlgMsg').textContent=m;$('#dlgOk').textContent=ok||'확인';$('#ov').classList.add('show');dlgRes=r;setTimeout(()=>$('#dlgOk').focus(),30);});}
+function uiPrompt(m,v,ok){dlgInp=true;const i=$('#dlgIn');i.style.display='block';i.value=v||'';return new Promise(r=>{$('#dlgMsg').textContent=m;$('#dlgOk').textContent=ok||'저장';$('#ov').classList.add('show');dlgRes=r;setTimeout(()=>{i.focus();i.select();},30);});}
 function dlgClose(v){$('#ov').classList.remove('show');const r=dlgRes;dlgRes=null;r&&r(v);}
-$('#dlgOk').onclick=()=>dlgClose(true);$('#dlgNo').onclick=()=>dlgClose(false);
-document.addEventListener('keydown',e=>{if(!$('#ov').classList.contains('show'))return;if(e.key==='Enter'){e.preventDefault();dlgClose(true);}if(e.key==='Escape')dlgClose(false);});
+$('#dlgOk').onclick=()=>dlgClose(dlgInp?$('#dlgIn').value:true);$('#dlgNo').onclick=()=>dlgClose(dlgInp?null:false);
+document.addEventListener('keydown',e=>{if(!$('#ov').classList.contains('show'))return;if(e.key==='Enter'&&!e.isComposing){e.preventDefault();$('#dlgOk').click();}if(e.key==='Escape')$('#dlgNo').click();});
 async function post(o){const r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(o)});return r.json();}
 const foot=()=>`<div class="vf">서포터즈 음원 목록 · v${PAGE_VERSION} · 배포 ${PAGE_DEPLOYED} (KST)<br>ⓒKIMJINHO</div>`;
 const S={code:ss.get('sdsg')||'',d:null,f:'pre',so:'likes',sel:{},last:[],at:''};
@@ -111,7 +118,8 @@ function vList(){
     ${S.at?`<div class="at">✅ 저장됨 · ${esc(S.at)}</div>`:''}
     ${rows.map(x=>{const on=!!S.sel[x.id];return `<div class="row ${on?'sel':''} ${x.played?'done':''}"><button class="ck" data-ck="${x.id}" aria-pressed="${on}" aria-label="${esc(x.title)} 고르기">${on?'✓':''}</button>
       ${x.vid?`<a class="th" href="${YT}/watch?v=${esc(x.vid)}" target="_blank" rel="noopener"><img alt="" loading="lazy" src="${YTI}/vi/${esc(x.vid)}/mqdefault.jpg"></a>`:`<a class="th" href="${YT}/results?search_query=${encodeURIComponent(x.title+' '+x.artist)}" target="_blank" rel="noopener">영상 없음<br>찾아보기</a>`}
-      <div class="mid"><b>${esc(x.title)}</b><small>${esc(x.artist)} · ${esc(x.key)}${x.why?' · “'+esc(x.why)+'”':''}</small></div>
+      <div class="mid"><b>${esc(x.title)}${x.test?'<span class="ttag">시험용</span>':''}</b><small>${esc(x.artist)} · ${esc(x.key)}${x.why?' · “'+esc(x.why)+'”':''}</small>
+        <button class="memo ${x.memo?'on':''}" data-mm="${x.id}">${x.memo?'메모: '+esc(x.memo):'메모 쓰기'} ✎</button></div>
       <span class="ht">♥ ${x.likes}</span><button class="dn" data-dn="${x.id}">${x.played?'재생완료 ✓':'재생완료'}</button></div>`;}).join('')||`<div class="empty">${all.length?'이 목록에 곡이 없어요.':'아직 추천된 곡이 없어요.'}</div>`}
     ${foot()}`;
   $('#out').onclick=()=>{ss.del('sdsg');S.code='';S.d=null;vGate();};
@@ -122,6 +130,8 @@ function vList(){
   document.querySelectorAll('[data-ck]').forEach(b=>b.onclick=()=>{const id=+b.dataset.ck;if(S.sel[id])delete S.sel[id];else S.sel[id]=1;vList();});
   const pl=$('#play');if(pl)pl.onclick=()=>{S.last=ok.map(x=>x.id);setTimeout(vList,60);};
   const mk=$('#mk');if(mk)mk.onclick=()=>mark(S.last,true);
+  document.querySelectorAll('[data-mm]').forEach(b=>b.onclick=async()=>{const x=all.find(y=>y.id===+b.dataset.mm);const v=await uiPrompt(`«${x.title}» 메모`+(x.memoAt?` (마지막 · ${x.memoBy} ${x.memoAt})`:''),x.memo||'','저장');if(v===null)return;
+    try{const r=await post({a:'sgMemo',code:S.code,id:x.id,text:v});if(!r.ok){toast(r.msg||'저장하지 못했어요');return;}S.d=r;S.at=r.savedAt;toast('✅ 메모 저장');vList();}catch(e){toast('연결이 안 돼요. 다시 눌러 주세요.');}});
   document.querySelectorAll('[data-dn]').forEach(b=>b.onclick=async()=>{const x=all.find(y=>y.id===+b.dataset.dn);
     if(x.played&&!await uiConfirm(`«${x.title}»을(를) «재생 전»으로 되돌릴까요?`,'되돌리기'))return;mark([x.id],!x.played);});
 }

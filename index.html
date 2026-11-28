@@ -1,4 +1,4 @@
-<!-- 파일명: index.html | @version 3.6.0 — 학생 배부용 사이트: 홈·시간표·선수 명단·점수판(대진표)·반티 모아 보기·응원 음원 추천 -->
+<!-- 파일명: index.html | @version 3.6.1 — 학생 배부용 사이트: 홈·시간표·선수 명단·점수판(대진표)·반티 모아 보기·응원 음원 추천 -->
 <!doctype html>
 <html lang="ko">
 <head>
@@ -270,6 +270,7 @@ button,input{font-family:inherit}
 .sgagree{display:flex;gap:8px;align-items:center;font-size:14px;font-weight:700;margin:12px 0 0;cursor:pointer}.sgagree input{width:20px;height:20px;accent-color:var(--blue)}
 .sgcnt{background:#f1f4f2;border-radius:10px;padding:8px 12px;font-size:13px;color:var(--ink2);margin-top:8px;font-weight:700}
 .mtag{flex:none;font-size:12px;font-weight:800;border-radius:999px;padding:3px 9px;background:#e6f5ec;color:#166534;white-space:nowrap}.mtag.no{background:#fde8e8;color:#991b1b}.mtag.pl{background:#e8eefc;color:#173ea9}
+.ttag{font-size:11px;font-weight:800;background:#ede6fd;color:#5b21b6;border-radius:6px;padding:1px 6px;margin-left:6px;vertical-align:1px}
 </style>
 </head>
 <body>
@@ -304,7 +305,7 @@ button,input{font-family:inherit}
 
 <script>
 const API='https://script.google.com/macros/s/AKfycbxLj-YCN1PJIQ5r4KnbaLyeCD997tRVkZoKJQ9Y-Fan75w4xx-4YJjUGsMZ-binoVeN/exec';
-const PAGE_VERSION='3.6.0', PAGE_DEPLOYED='2026-11-28 23:23';
+const PAGE_VERSION='3.6.1', PAGE_DEPLOYED='2026-11-28 23:56';
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const ls={get(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
@@ -506,7 +507,7 @@ async function vSong(){
     <div class="sl" ${MINE?'style="display:none"':''}>${L.map(x=>`<div class="sg ${x.id===SG_HL?'hl':''}" id="sg${x.id}">
       ${x.vid?`<a class="th" href="https://www.youtube.com/watch?v=${esc(x.vid)}" target="_blank" rel="noopener" aria-label="${esc(x.title)} 유튜브로 듣기"><img alt="" loading="lazy" src="https://i.ytimg.com/vi/${esc(x.vid)}/mqdefault.jpg"><i></i></a>`
         :`<a class="th no" href="https://www.youtube.com/results?search_query=${encodeURIComponent(x.title+' '+x.artist)}" target="_blank" rel="noopener">유튜브에서<br>찾기</a>`}
-      <div><b>${esc(x.title)}${x.played?'<span class="tg">틀었어요</span>':''}</b><p>${esc(x.artist)}${x.artist?' · ':''}${esc(x.key)} 추천${x.mine?' · 내 추천':''}</p></div>
+      <div><b>${esc(x.title)}${x.test?'<span class="ttag">시험용</span>':''}${x.played?'<span class="tg">틀었어요</span>':''}</b><p>${esc(x.artist)}${x.artist?' · ':''}${esc(x.key)} 추천${x.mine?' · 내 추천':''}</p></div>
       <button class="lk ${x.liked?'on':''}" data-id="${x.id}" aria-label="하트 ${x.likes}">${heart(x.liked)}<span class="num">${x.likes}</span></button></div>`).join('')
       ||`<div class="empty" style="margin:0">${SGV==='mine'?'아직 내가 추천한 곡이 없어요.':'아직 추천된 곡이 없어요. 첫 곡을 추천해 주세요!'}</div>`}</div>
     <div style="height:70px"></div>${footer()}
