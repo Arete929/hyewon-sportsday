@@ -1,4 +1,4 @@
-<!-- 파일명: index.html | @version 3.5.0 — 학생 배부용 사이트: 홈·시간표·선수 명단·점수판(대진표)·반티 모아 보기·응원 음원 추천 -->
+<!-- 파일명: index.html | @version 3.6.0 — 학생 배부용 사이트: 홈·시간표·선수 명단·점수판(대진표)·반티 모아 보기·응원 음원 추천 -->
 <!doctype html>
 <html lang="ko">
 <head>
@@ -264,6 +264,12 @@ button,input{font-family:inherit}
 .ptab td.g{color:#b7791f;font-weight:900}
 .sgtip{background:#eef3fe;border-radius:12px;padding:10px 12px;font-size:13.5px;color:#1e3a8a;line-height:1.5;margin:10px 0 2px}
 .fl .hint{display:block;font-weight:700;font-size:12.5px;margin-top:2px}.hint.ok{color:#16884f}.hint.warn{color:#b45309}
+
+.sgrule{background:#eef3fe;border-radius:12px;padding:10px 12px;margin:10px 0 2px;color:#1e3a8a}
+.sgrule>b{display:block;font-size:14px;margin-bottom:4px}.sgrule ul{margin:0;padding-left:18px}.sgrule li{font-size:13px;line-height:1.6}
+.sgagree{display:flex;gap:8px;align-items:center;font-size:14px;font-weight:700;margin:12px 0 0;cursor:pointer}.sgagree input{width:20px;height:20px;accent-color:var(--blue)}
+.sgcnt{background:#f1f4f2;border-radius:10px;padding:8px 12px;font-size:13px;color:var(--ink2);margin-top:8px;font-weight:700}
+.mtag{flex:none;font-size:12px;font-weight:800;border-radius:999px;padding:3px 9px;background:#e6f5ec;color:#166534;white-space:nowrap}.mtag.no{background:#fde8e8;color:#991b1b}.mtag.pl{background:#e8eefc;color:#173ea9}
 </style>
 </head>
 <body>
@@ -279,7 +285,7 @@ button,input{font-family:inherit}
 <div class="big-ph" id="bigPh"><b id="bigT"></b><img id="bigI" alt=""><button id="bigX">닫기</button></div>
 <div class="sheet-ov" id="sheet"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="shT">
   <div class="gr"></div><h3 id="shT">노래 추천하기</h3><div class="sub">경기 사이·점심시간에 틀 노래를 추천해 주세요</div>
-  <div class="sgtip">랩이 많은 노래보다 <b>경쾌하고 신나는 멜로디</b> 위주의 노래가 선곡될 가능성이 높아요.</div>
+  <div class="sgrule"><b>이런 곡을 추천해 주세요</b><ul><li>랩이 많은 노래보다 <b>경쾌하고 신나는 멜로디</b> 위주의 곡이 선곡될 가능성이 높아요</li><li><b>선정적·폭력적인 가사</b>가 있는 곡은 빼 주세요</li><li><b>유튜브 링크</b>를 넣으면 선곡될 확률이 아주 높아져요</li><li>한 사람이 <b>하루 2곡</b>, 모두 합쳐 <b>최대 5곡</b>까지 추천할 수 있어요</li></ul></div>
   <label class="fl">추천한 사람<span class="hint warn">학번과 이름을 정확히 적어야 추천으로 인정돼요 · 다른 학생에게는 반만 보여요</span></label>
   <div class="two"><input class="inp num" id="sgSid" inputmode="numeric" maxlength="4" placeholder="학번 4자리" autocomplete="off"><input class="inp" id="sgName" placeholder="이름" autocomplete="off"></div>
   <label class="fl" for="sgArtist">가수</label><input class="inp" id="sgArtist" maxlength="40" autocomplete="off" placeholder="예: aespa">
@@ -287,6 +293,9 @@ button,input{font-family:inherit}
   <label class="fl" for="sgUrl">유튜브 링크<span class="hint ok">링크를 넣으면 선곡될 확률이 아주 높아져요</span></label>
   <input class="inp" id="sgUrl" inputmode="url" autocomplete="off" placeholder="유튜브 «공유 → 링크 복사» 후 붙여 넣기">
   <div class="pv" id="sgPv"><img id="sgPvI" alt=""><div><b>✓ 영상 찾았어요</b><p>맞는 영상인지 확인해 주세요</p></div></div>
+  <label class="fl" for="sgWhy">추천 이유 <span style="color:var(--muted2);font-weight:600">(선택)</span></label><input class="inp" id="sgWhy" maxlength="80" autocomplete="off" placeholder="예: 이어달리기 때 들으면 신나요">
+  <label class="sgagree"><input type="checkbox" id="sgAgree"><span>위 기준(신나는 곡 · 가사 괜찮음)을 지켰어요</span></label>
+  <div class="sgcnt" id="sgCnt"></div>
   <div class="msg" id="sgMsg" style="margin:8px 0 0"></div>
   <div class="acts"><button class="no" id="sgNo">닫기</button><button class="go" id="sgGo">추천 보내기</button></div>
   <div class="lim" id="sgLim"></div>
@@ -295,7 +304,7 @@ button,input{font-family:inherit}
 
 <script>
 const API='https://script.google.com/macros/s/AKfycbxLj-YCN1PJIQ5r4KnbaLyeCD997tRVkZoKJQ9Y-Fan75w4xx-4YJjUGsMZ-binoVeN/exec';
-const PAGE_VERSION='3.5.0', PAGE_DEPLOYED='2026-11-28 22:38';
+const PAGE_VERSION='3.6.0', PAGE_DEPLOYED='2026-11-28 23:23';
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const ls={get(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
@@ -488,11 +497,13 @@ async function vSong(){
   let L=SONGS.songs.slice();
   if(SGV==='likes')L.sort((a,b)=>b.likes-a.likes||b.id-a.id);else L.sort((a,b)=>b.id-a.id);
   if(SGV==='mine'&&WHO)L=L.filter(x=>x.mine);
+  const MINE=SGV==='mine'&&WHO?(SONGS.mine||[]):null;
   const left=Math.max(0,SONGS.dayMax-SONGS.usedToday);
   $('#app').innerHTML=head+`<div class="seg"><button data-v="likes" class="${SGV==='likes'?'on':''}">인기순</button><button data-v="new" class="${SGV==='new'?'on':''}">최신순</button>${WHO?`<button data-v="mine" class="${SGV==='mine'?'on':''}">내 추천</button>`:''}</div>
     ${SG_FRESH?`<div class="savedat ok" style="margin:8px 0 0">✅ 추천했어요 · ${esc(SG_FRESH)}</div>`:''}
     ${!SONGS.open?'<div class="rule">지금은 추천을 받지 않아요. 하트는 누를 수 있어요.</div>':''}
-    <div class="sl">${L.map(x=>`<div class="sg ${x.id===SG_HL?'hl':''}" id="sg${x.id}">
+    ${MINE?`<div class="sgcnt" style="margin:10px 16px 8px">내가 추천한 곡 ${SONGS.mineN||0} / ${SONGS.totMax||5}</div><div class="sl">${MINE.map(x=>`<div class="sg" style="display:flex;align-items:center;gap:10px"><div style="flex:1;min-width:0"><b>${esc(x.title)}</b><p>${esc(x.artist)} · ${esc(x.t)}</p></div><span class="mtag ${x.status==='숨김'?'no':x.played?'pl':''}">${x.status==='숨김'?'선생님이 숨김':x.played?'틀었어요':'모두에게 보여요'}</span></div>`).join('')||'<div class="empty" style="margin:0">아직 내가 추천한 곡이 없어요.</div>'}</div>`:''}
+    <div class="sl" ${MINE?'style="display:none"':''}>${L.map(x=>`<div class="sg ${x.id===SG_HL?'hl':''}" id="sg${x.id}">
       ${x.vid?`<a class="th" href="https://www.youtube.com/watch?v=${esc(x.vid)}" target="_blank" rel="noopener" aria-label="${esc(x.title)} 유튜브로 듣기"><img alt="" loading="lazy" src="https://i.ytimg.com/vi/${esc(x.vid)}/mqdefault.jpg"><i></i></a>`
         :`<a class="th no" href="https://www.youtube.com/results?search_query=${encodeURIComponent(x.title+' '+x.artist)}" target="_blank" rel="noopener">유튜브에서<br>찾기</a>`}
       <div><b>${esc(x.title)}${x.played?'<span class="tg">틀었어요</span>':''}</b><p>${esc(x.artist)}${x.artist?' · ':''}${esc(x.key)} 추천${x.mine?' · 내 추천':''}</p></div>
@@ -514,9 +525,11 @@ async function like(id,btn){
   catch(e){btn.disabled=false;x.liked=!x.liked;x.likes+=x.liked?1:-1;btn.classList.toggle('on',x.liked);btn.innerHTML=heart(x.liked)+`<span class="num">${x.likes}</span>`;toast('연결이 안 돼요');}
 }
 async function openSheet(){
-  const left=WHO?Math.max(0,SONGS.dayMax-SONGS.usedToday):SONGS.dayMax;
+  const left=WHO?Math.max(0,SONGS.dayMax-SONGS.usedToday):SONGS.dayMax,tot=SONGS.totMax||5,mn=WHO?(SONGS.mineN||0):0;
+  if(WHO&&mn>=tot){uiAlert(`추천한 곡이 ${tot}곡이 되어 더 추천할 수 없어요.\n«내 추천»에서 내가 추천한 곡을 볼 수 있어요.`);return;}
   if(!left){uiAlert(`오늘은 ${SONGS.dayMax}곡을 다 추천했어요. 내일 또 추천해 주세요!\n마음에 드는 곡에 하트를 눌러 주세요.`);return;}
-  ['#sgUrl','#sgTitle','#sgArtist'].forEach(s=>$(s).value='');$('#sgSid').value=WHO?WHO.sid:'';$('#sgName').value=WHO?WHO.name:'';$('#sgMsg').textContent='';$('#sgPv').classList.remove('show');
+  ['#sgUrl','#sgTitle','#sgArtist','#sgWhy'].forEach(s=>$(s).value='');$('#sgAgree').checked=false;
+  $('#sgCnt').textContent=WHO?`내가 추천한 곡 ${mn} / ${tot} · 앞으로 ${tot-mn}곡 더 추천할 수 있어요`:`한 사람이 모두 합쳐 ${tot}곡까지 추천할 수 있어요`;$('#sgSid').value=WHO?WHO.sid:'';$('#sgName').value=WHO?WHO.name:'';$('#sgMsg').textContent='';$('#sgPv').classList.remove('show');
   $('#sgLim').textContent=`한 사람이 하루 ${SONGS.dayMax}곡까지${WHO?` · 오늘 ${left}곡 남았어요`:''} · 학교에 맞지 않는 곡은 선생님이 숨길 수 있어요`;
   $('#sgGo').disabled=false;$('#sgGo').textContent='추천 보내기';
   $('#sheet').classList.add('show');setTimeout(()=>$(WHO?'#sgArtist':'#sgSid').focus(),60);
@@ -531,8 +544,10 @@ $('#sgGo').onclick=async()=>{
   if(!/^\d{4}$/.test(sid)||!name){$('#sgMsg').textContent='추천한 사람 — 학번 4자리와 이름을 넣어 주세요.';(sid?$('#sgName'):$('#sgSid')).focus();return;}
   if(ytId(url)===null){$('#sgMsg').textContent='유튜브 주소가 아닌 것 같아요. 비워 둬도 돼요.';return;}
   if(!title){$('#sgMsg').textContent='노래 제목을 넣어 주세요.';$('#sgTitle').focus();return;}
+  if(!$('#sgAgree').checked){$('#sgMsg').textContent='추천 기준을 지켰는지 체크해 주세요.';return;}
+  const why=$('#sgWhy').value.trim();
   $('#sgGo').disabled=true;$('#sgGo').textContent='보내는 중…';
-  try{const r=await post({a:'songAdd',sid,name,dev:DEV,url,title,artist});
+  try{const r=await post({a:'songAdd',sid,name,dev:DEV,url,title,artist,why,agree:true});
     if(!r.ok){$('#sgGo').disabled=false;$('#sgGo').textContent='추천 보내기';$('#sgMsg').textContent=r.msg;
       if(r.dupId){closeSheet();SG_HL=r.dupId;SGV='likes';toast('이미 있는 곡이에요 — 하트를 눌러 주세요');vSong();}return;}
     WHO={sid,name};ls.set('sd_who',WHO);SONGS=r;SG_FRESH=r.savedAt;SG_HL=r.added;SGV='new';closeSheet();toast('✅ 추천했어요');vSong();}
